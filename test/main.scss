@@ -1,0 +1,47 @@
+/** ====================================================================
+ * main.scss
+ * ---------
+ * @description Test example for using flipper.
+===================================================================== */
+
+
+/** [[START]] Core layer styles. */
+// Flipper alone does not produce any CSS... it must be included with @include.
+@import '../src/flipper';
+@include flipper();
+/** [[END]] */
+
+
+/** [[START]] View layer styles. */
+* {
+	box-sizing: border-box;
+}
+.container {
+	display: flex;
+	height: 100vh;
+	margin-left: 40px;
+	margin-right: 40px;
+}
+.column {
+	display: flex;
+	flex-direction: column;
+	width: 33.33333%;
+}
+.flipper {
+	width: 240px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+
+	&--equal-height {
+		height: 240px;
+	}
+
+	&__modal {
+		height: inherit;
+		width: inherit;
+	}
+}
+.padded {
+	padding: 20px;
+}
+/** [[END]] */
