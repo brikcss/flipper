@@ -23,8 +23,6 @@
     .flipper--flipped .flipper__container {
       transform: rotateY(-180deg); }
   .flipper__front, .flipper__back {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
     float: left;
     height: inherit;
     width: inherit;
