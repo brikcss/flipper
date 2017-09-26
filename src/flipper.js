@@ -13,7 +13,9 @@ var flipper = (function () {
 		create: createFlippers,
 		open: openFlipper,
 		close: closeFlipper,
-		destroy: destroyFlipper
+		toggle: toggleFlipper,
+		destroy: destroyFlipper,
+		flippers: {}
 	};
 	var defaults = {
 		type: 'inline', // 'inline'|'modal'
@@ -38,7 +40,6 @@ var flipper = (function () {
 			modalsActive: defaults.flipperClass + '__modals--active'
 		},
 	};
-	var flippers = {};
 	var nextFlipperId = 0;
 	var $flipperModals = document.querySelector(defaults.classes.modals);
 
@@ -75,64 +76,51 @@ var flipper = (function () {
 			return false;
 		}
 		// Iterate through elements to create a flipper for each.
-		elements = elements.forEach(function (element, i) {
-			var flipper;
-			// Allow user to pass a function/callback to dynamically create options.
-			if (typeof options === 'function') {
-				flipper = Object.assign({$element: element}, defaults);
-				flipper = Object.assign(flipper, options(flipper));
-			} else {
-				flipper = Object.assign({$element: element}, defaults, options);
-			}
-			// Make sure the element is a DOM element.
-			if (!(element instanceof HTMLElement)) {
-				console.error('Flipper was not created because no element was found: ', flipper); // eslint-disable-line
-				return false;
-			}
-			// If flipper.id is a function/callback, call it now.
-			if (typeof flipper.id === 'function') {
-				flipper.id = flipper.id(flipper);
-			}
-			// Add a flipper ID if it doesn't exist.
-			if (flipper.id === undefined) {
-				flipper.id = nextFlipperId;
-			}
-			// If flipper ID already exists, create a more unique ID.
-			if (flippers[flipper.id]) {
-				flipper.id = flipper.id + '__' + i;
-			}
-			// If flipper.type is a function/callback, run it now.
-			if (typeof flipper.type === 'function') {
-				flipper.type = flipper.type(flipper);
-			}
+		return elements.forEach(function (element, i) {
 			// Merge options with defaults and create the flipper instance.
-			return createFlipper(flipper);
+			return createFlipper(element, options);
 		});
-
-		// Bump the next ID.
-		nextFlipperId += 1;
-		// Return the elements.
-		return elements;
 	}
 
 	/**
 	 * Create a flipper instance and cache it.
 	 * @method  createFlipper
-	 * @param   {object}  flipper  Flipper options object.
+	 * @param   {HTMLElement}  element  Flipper options object.
+	 * @param   {object}  options  Flipper options object.
 	 * @return  {object}  Flipper object.
 	 */
-	function createFlipper(flipper) {
-		// Make sure flipper.$element exists.
-		if (!flipper.$element) {
-			console.error('Flipper was not created because flipper.$element was not found: ', flipper); // eslint-disable-line
+	function createFlipper(element, options) {
+		var flipper;
+		// Allow user to pass a function/callback to dynamically create options.
+		if (typeof options === 'function') {
+			flipper = Object.assign({$element: element}, defaults);
+			flipper = Object.assign(flipper, options(flipper));
+		} else {
+			flipper = Object.assign({$element: element}, defaults, options);
+		}
+		// Make sure the element exists and is a DOM element.
+		if (!flipper.$element || !(flipper.$element instanceof HTMLElement)) {
+			console.error('Flipper was not created because no element was found: ', flipper); // eslint-disable-line
 			return false;
+		}
+		// Add a flipper ID if it doesn't exist.
+		if (flipper.id === undefined) {
+			flipper.id = 'flipper__' + nextFlipperId;
+			nextFlipperId += 1;
+		}
+		// If flipper ID already exists, create a more unique ID.
+		if (service.flippers[flipper.id]) {
+			flipper.id = flipper.id + '__' + nextFlipperId;
+			nextFlipperId += 1;
 		}
 		// Build dom and attach methods.
 		buildFlipperDom(flipper);
 		addFlipperMethods(flipper);
 		addFlipperEvents(flipper);
+		// Add flipper state.
+		flipper.isOpen = false;
 		// Cache flipper.
-		flippers[flipper.id] = flipper;
+		service.flippers[flipper.id] = flipper;
 		return flipper;
 	}
 
@@ -143,6 +131,8 @@ var flipper = (function () {
 	 * @return  {object}  Flipper object.
 	 */
 	function buildFlipperDom(flipper) {
+		// Add flipper id to $element.
+		flipper.$element.dataset.flipperId = flipper.id;
 		// Cache important flipper DOM elements.
 		flipper.$front = flipper.$element.children[0];
 		flipper.$back = flipper.$element.children[1];
@@ -179,6 +169,9 @@ var flipper = (function () {
 		};
 		flipper.close = function close() {
 			closeFlipper(flipper.id);
+		};
+		flipper.toggle = function toggle() {
+			toggleFlipper(flipper.id);
 		};
 		flipper.destroy = function destroy() {
 			destroyFlipper(flipper.id);
@@ -218,7 +211,9 @@ var flipper = (function () {
 	 * @param   {string}  id  Flipper id.
 	 */
 	function openFlipper(id) {
-		var flipper = flippers[id];
+		var flipper = service.flippers[id];
+		// Update flipper state.
+		flipper.isOpen = true;
 		// Logic for modal flipper.
 		if (flipper.type === 'modal') {
 			// Close any active flipper modal so only one can be open at a time.
@@ -265,7 +260,9 @@ var flipper = (function () {
 		if (!id && service.activeFlipperModal && service.activeFlipperModal.type === 'modal') {
 			id = service.activeFlipperModal.id;
 		}
-		var flipper = flippers[id];
+		var flipper = service.flippers[id];
+		// Update flipper state.
+		flipper.isOpen = false;
 		// Handle logic for flipper modal.
 		if (flipper.type === 'modal') {
 			// Deactivate flipper.
@@ -298,12 +295,28 @@ var flipper = (function () {
 	}
 
 	/**
+	 * Toggle flipper open and close.
+	 * @method  toggleFlipper
+	 * @param   {string}  id  Flipper id.
+	 * @return  {object}  Flipper object.
+	 */
+	function toggleFlipper(id) {
+		var flipper = service.flippers[id];
+		if (flipper.isOpen) {
+			flipper.close();
+		} else {
+			flipper.open();
+		}
+		return flipper;
+	}
+
+	/**
 	 * Destroy flipper and remove from memory.
 	 * @method  destroyFlipper
 	 * @param   {string}  id  Flipper id.
 	 */
 	function destroyFlipper(id) {
-		var flipper = flippers[id];
+		var flipper = service.flippers[id];
 		// Make sure flipper exists.
 		if (!flipper) {
 			return false;
@@ -327,7 +340,7 @@ var flipper = (function () {
 			});
 		}
 		// Remove from service cache.
-		delete flippers[id];
+		delete service.flippers[id];
 	}
 
 	return service;

@@ -18,13 +18,22 @@ module.exports = {
 			port: 8080
 		}
 	},
-	files: ['./test/index.html', './test/flipper.css', './src/flipper.js'],
+	files: [
+		'./test/vanilla/index.html',
+		'./test/angular/index.html',
+		'./test/flipper.css',
+		'./src/flipper.js',
+		'./src/angular/*.js'
+	],
 	watchTask: true,
 	watchEvents: ['add', 'change', 'unlink'],
 	watchOptions: {
 		ignoreInitial: true
 	}, // Options passed to chokidar.
-	server: ['test', 'src'],
+	server: {
+		baseDir: ['test', 'src'],
+		directory: true
+	},
 	proxy: false,
 	port: 3000,
 	serveStatic: [],

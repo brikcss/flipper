@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Flipper Demo</title>
-	<link rel="stylesheet" type="text/css" href="flipper.css">
+	<link rel="stylesheet" type="text/css" href="../flipper.css">
 </head>
 <body>
 	<div class="container">
@@ -18,6 +18,9 @@
 
 		<div class="columns">
 			<div class="column">
+				<div>
+					<button class="flipper__toggle" type="button">Click me to toggle the first flipper.</button>
+				</div>
 				<!-- Normal flipper. -->
 				<div class="flipper" data-flipper-id="inlineFlipper">
 					<div>
@@ -181,7 +184,7 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="flipper.js"></script>
+	<script type="text/javascript" src="../flipper.js"></script>
 	<script type="text/javascript">
 		/**
 		 * How to instantiate flipper.
@@ -202,6 +205,13 @@
 				addClick: true,
 				closeButtons: '.flipper__close'
 			};
+		});
+
+		/**
+		 * Add a flipper toggle button.
+		 */
+		document.querySelector('.flipper__toggle').addEventListener('click', function () {
+			flipper.toggle('inlineFlipper')
 		});
 	</script>
 </body>
