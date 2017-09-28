@@ -3,13 +3,7 @@
  * ---------
  * @description Test example for using flipper.
 ===================================================================== */
-/** [[START]] Core layer styles. */
-/** ====================================================================
- * flipper.scss
- * ------------
- * @description SASS mixin to apply flipper anywhere.
- * @layer component
-===================================================================== */
+/** [[START]] Core layer. */
 .flipper {
   perspective: 1000px;
   position: relative; }
@@ -22,6 +16,21 @@
     transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3); }
     .flipper--flipped .flipper__container {
       transform: rotateY(-180deg); }
+    .flipper__container--modal {
+      display: flex;
+      pointer-events: initial;
+      will-change: left, top, height, width, transform, box-shadow;
+      transform: rotateY(0deg);
+      transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s, transform 0.3s, box-shadow 0.3s;
+      transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3); }
+      .flipper__container--modal.flipper--flipped {
+        left: calc(50% - 200px) !important;
+        top: calc(50% - 200px) !important;
+        height: 400px !important;
+        width: 400px !important;
+        transform: rotateY(-180deg); }
+        .flipper__container--modal.flipper--flipped .flipper__back {
+          box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3); }
   .flipper__front, .flipper__back {
     float: left;
     height: inherit;
@@ -43,18 +52,6 @@
     transform: rotateY(180deg); }
     .flipper--flipped .flipper__back {
       max-height: 100vh !important; }
-  .flipper--unequal-height {
-    height: auto !important; }
-    .flipper--unequal-height .flipper__front {
-      max-height: 100vh !important;
-      transition: max-height 0s 0.12s; }
-    .flipper--unequal-height .flipper__back {
-      max-height: 0 !important;
-      transition: max-height 0s 0.12s; }
-    .flipper--unequal-height.flipper--flipped .flipper__front {
-      max-height: 0; }
-    .flipper--unequal-height.flipper--flipped .flipper__back {
-      max-height: 100vh; }
   .flipper__modals {
     pointer-events: none;
     will-change: auto; }
@@ -66,25 +63,9 @@
       top: 0;
       right: 0;
       z-index: 10; }
-  .flipper__modal {
-    display: flex;
-    pointer-events: initial;
-    will-change: left, top, height, width, transform, box-shadow;
-    transform: rotateY(0deg);
-    transform-style: preserve-3d;
-    transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s, transform 0.3s, box-shadow 0.3s;
-    transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3); }
-    .flipper__modal.flipper--flipped {
-      left: calc(50% - 200px) !important;
-      top: calc(50% - 200px) !important;
-      height: 400px !important;
-      width: 400px !important;
-      transform: rotateY(-180deg); }
-      .flipper__modal.flipper--flipped .flipper__back {
-        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3); }
 
 /** [[END]] */
-/** [[START]] View layer styles. */
+/** [[START]] View layer. */
 * {
   box-sizing: border-box; }
 

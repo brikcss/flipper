@@ -1,78 +1,137 @@
 # Flipper
 
-> Flipper is a front end web module that flips things. In style. Flipper can flip an element in place or open it up to a modal dialog.
+> Flipper is a front end web component that flips things in style. Flipper can flip an element in place or flip it open to a modal dialog.
 
 <!-- MarkdownTOC depth=5 -->
 
-1. [Setup / install](#setup--install)
+1. [Install](#install)
 1. [Usage](#usage)
-1. [Configuration](#configuration)
-	1. [Element / selector](#element--selector)
-	1. [Options](#options)
-		1. [Options as an object](#options-as-an-object)
-		1. [Options as a function](#options-as-a-function)
+1. [Flipper API](#flipper-api)
+	1. [Flipper options](#flipper-options)
+	1. [Flipper methods and properties](#flipper-methods-and-properties)
+		1. [`flipper.create( element, options )`](#flippercreate-element-options-)
+			1. [`element`](#element)
+			1. [`options`](#options)
+		1. [`flipper.open( flipperId )` and `instance.open()`](#flipperopen-flipperid--and-instanceopen)
+		1. [`flipper.close( flipperId )` and `instance.close()`](#flipperclose-flipperid--and-instanceclose)
+		1. [`flipper.toggle( flipperId )` and `instance.toggle()`](#flippertoggle-flipperid--and-instancetoggle)
+		1. [`flipper.all`](#flipperall)
+1. [Angular Flipper](#angular-flipper)
+	1. [`flipper` directive](#flipper-directive)
+	1. [`open-flipper` directive](#open-flipper-directive)
+	1. [`close-flipper` directive](#close-flipper-directive)
+	1. [`toggle-flipper` directive](#toggle-flipper-directive)
 1. [Questions, comments, concerns](#questions-comments-concerns)
 
 <!-- /MarkdownTOC -->
 
-<a name="setup--install"></a>
-## Setup / install
+<a name="install"></a>
+## Install
 
-1. Install it:
-	```shell
-	npm install flipper
-	```
-2. Include the script:
-	```html
-	<!-- index.html -->
-	<script src="flipper.min.js"></script>
-	```
-3. Include the styles:
-	```scss
-	// main.scss
-	@include flipper(); // You can pass options here, see "Usage" below.
-	```
+```shell
+npm install @brikcss/flipper
+```
 
 <a name="usage"></a>
 ## Usage
 
-Once flipper is set up, you must instantiate it on one or more DOM elements. To instantiate:
+1. Pick your flavor: _vanilla JS_ or _AngularJS_.
+2. Include the script:
 
-```js
-flipper.create(elementOrSelector, options);
-```
+	For vanilla:
 
-<a name="configuration"></a>
-## Configuration
+	```html
+	<!-- index.html -->
+	<script src="src/vanilla/flipper.js"></script>
+	```
 
-|       Argument      |          Type         |
-|---------------------|-----------------------|
-| `elementOrSelector` | string or HTMLElement |
-| `options`           | object or function    |
+	For angular:
 
-<a name="element--selector"></a>
-### Element / selector
+	```html
+	<!-- index.html -->
+	<script src="src/angular/flipper-module.js"></script>
+	<script src="src/angular/flipper-service.js"></script>
+	<script src="src/angular/flipper-directives.js"></script>
+	```
 
-When passing a string as the element selector, flipper will perform a `querysSelectorAll` on your string selector to grab DOM elements. For example:
+3. Include the styles:
 
-```js
-// This will do `document.querySelectorAll('.my-flipper')` and bind flipper to all DOM elements that match your selector.
-flipper.create('.my-flipper');
-```
+	Include `src/flipper.scss` if you want to customize anything:
 
-is the same as:
+	```sass
+	// main.scss
+	@import 'flipper.scss';
 
-```js
-flipper.create(document.querySelectorAll('.my-flipper'));
-```
+	// @include the flipper mixin wherever you want your flipper classes.
+	@include flipper(/* Mixin settings go here */);
+		// These are the default flipper mixin settings.
+		$base: flipper, // This will be the base flipper class.
+		$flipFromRight: true, // Whether it will flip from right or left.
+		$duration: 0.3s, // Duration of transition.
+		$modal: (
+			width: 400px, // width of flipper modal.
+			height: 400px // height of flipper modal.
+		),
+		$bg: (front: #ccc, back: #aaa) // background-colors used in flipper.
+	);
+	```
 
-<a name="options"></a>
-### Options
+	OR
 
-The options argument can be an [`object`](#options-as-an-object) or a [`function`](#options-as-a-function).
+	Include `dist/flipper.css` if you just want all default flipper classes and settings:
 
-<a name="options-as-an-object"></a>
-#### Options as an object
+	```html
+	<link rel="stylesheet" type="text/css" href="flipper.css">
+	```
+
+4. Create a flipper instance:
+
+	_Each flipper element must have at least two immediate child elements._ Flipper will always use the first immediate child as the flipper's front side and the second immediate child as the back side.
+
+	For vanilla:
+
+	```html
+	<!-- HTML: -->
+	<div class="my-flipper">
+		<!-- Flipper's front side. -->
+		<div>...</div>
+		<!-- Flipper's back side. -->
+		<div>...</div>
+	</div>
+	```
+
+	```js
+	// JS:
+	flipper.create('.my-flipper', options);
+
+	// or:
+	flipper.create(document.querySelectorAll('.my-flipper'), options);
+	```
+
+	For Angular:
+
+	```html
+	<!-- This instantiates flipper with all flipper defaults. -->
+	<div flipper>
+		<!-- Flipper's front side. -->
+		<div>...</div>
+		<!-- Flipper's back side. -->
+		<div>...</div>
+	</div>
+
+	<!-- OR -->
+
+	<!-- You can also pass the options object directly to flipper. -->
+	<div flipper="{...}">...</div>
+	```
+
+<a name="flipper-api"></a>
+## Flipper API
+
+The flipper API is exactly the same for the vanilla JS plugin as it is for the Angular flipper service. The only difference is how flipper is referenced. In vanilla, flipper is referenced by the global `flipper` variable, whereas in Angular it is referenced by `flipperService`. But the API is the same.
+
+<a name="flipper-options"></a>
+### Flipper options
 
 <table>
 	<thead>
@@ -84,24 +143,24 @@ The options argument can be an [`object`](#options-as-an-object) or a [`function
 	</thead>
 	<tbody>
 		<tr>
+			<td><code>id</code></td>
+			<td><code>string</code></td>
+			<td>(<code><em>''</em></code>) Give a flipper instance an ID if you need to reference the instance from the flipper plugin or service. This is an alternative to caching the object returned by the `flipper.create()` method.</td>
+		</tr>
+		<tr>
 			<td><code>type</code></td>
 			<td><code>string</code></td>
 			<td>(<code><em>'inline'</em>|'modal'</code>) Sets the type of flipper. An inline flipper flips in place, while a modal flipper flips open as it transitions to a modal dialog.</td>
 		</tr>
 		<tr>
-			<td><code>addClick</code></td>
-			<td><code>boolean</code></td>
-			<td>(<code><em>false</em></code>) When true, adds a click event to the <code>$front</code> element which flips the flipper.</td>
-		</tr>
-		<tr>
-			<td><code>closeButtons</code></td>
+			<td><code>openElements</code></td>
 			<td><code>string</code></td>
-			<td>(<code><em>''</em></code>) When set, closes the flipper when clicking on any DOM element <em>which is contained inside of the main flipper <code>$element</code></em>.</td>
+			<td>(<code><em>'.flipper__front'</em></code>) Binds an open click event <em>to any element(s) inside of the flipper element</em> which match the selector you provide.</td>
 		</tr>
 		<tr>
-			<td><code>unequalHeight</code></td>
-			<td><code>boolean</code></td>
-			<td>(<code><em>false</em></code>) Set to <code>true</code> to add the unequal height class.<br><em>Note: all this setting does is add a class, so you can alternatively add the unequal height class directly to your markup to produce the same results.</em></td>
+			<td><code>closeElements</code></td>
+			<td><code>string</code></td>
+			<td>(<code><em>'.flipper__close'</em></code>) Binds a close click event <em>to any element(s) inside of the flipper element</em> which match the selector you provide.</td>
 		</tr>
 		<tr>
 			<td><code>animationTime</code></td>
@@ -116,7 +175,7 @@ The options argument can be an [`object`](#options-as-an-object) or a [`function
 		<tr>
 			<td><code>flipperClass</code></td>
 			<td><code>string</code></td>
-			<td>(<code><em>'flipper'</em></code>) Sets the base class prefix. Combined with the sass mixin you can apply any class as the main flipper element.</td>
+			<td>(<code><em>'flipper'</em></code>) Sets the base class prefix. You will need this if you changed the base class in the `flipper.scss` mixin.</td>
 		</tr>
 		<tr>
 			<td><code>classes</code></td>
@@ -126,27 +185,119 @@ The options argument can be an [`object`](#options-as-an-object) or a [`function
 	</tbody>
 </table>
 
-<a name="options-as-a-function"></a>
-#### Options as a function
+<a name="flipper-methods-and-properties"></a>
+### Flipper methods and properties
 
-Options can also be a callback function, which gives you access to each DOM element being configured. This is helpful to instantiate flipper on multiple elements in a single call to flipper while passing different options to different elements.
+Flipper attaches the `open`, `close`, and `toggle` methods both to the flipper plugin itself, as well as to each flipper instance. When calling one of these methods on the actual instance, you do not need to pass the `flipperId`. In the examples below, the word `instance` is used to refer to the flipper instance returned by `flipper.create()`.
 
-Take this example:
+<a name="flippercreate-element-options-"></a>
+#### `flipper.create( element, options )`
+
+Creates a new flipper instance, which returns the flipper instance.
 
 ```js
-// Even though this instantiates ALL .flipper elements, each is configured individually.
-flipper.create('.flipper', function (flipper) {
-	// The flipper object gives you access to flipper.$element and other default settings.
+flipper.create(element, options);
+```
+
+<a name="element"></a>
+##### `element`
+
+`HTMLElement` or `string`
+
+If you pass a string, flipper will grab element(s) with `document.querySelectoAll(string)`.
+
+<a name="options"></a>
+##### `options`
+
+If you pass a `function`, you must return the options as an object. Using a `function` gives you the advantage of having access to the element being instantiated, as well as other flipper options. For example:
+
+```js
+// Even though this instantiates many .my-flipper elements, each is configured individually.
+flipper.create('.my-flipper', function (flipper) {
+	// The flipper object gives you access to flipper.$element and other flipper settings.
 	return {
 		id: flipper.$element.getAttribute('flipper-id'),
 		type: flipper.$element.getAttribute('flipper-type') || 'inline',
-		addClick: true,
-		closeButtons: '.flipper__close'
 	};
 });
+```
+
+<a name="flipperopen-flipperid--and-instanceopen"></a>
+#### `flipper.open( flipperId )` and `instance.open()`
+
+Opens the corresponding flipper.
+
+<a name="flipperclose-flipperid--and-instanceclose"></a>
+#### `flipper.close( flipperId )` and `instance.close()`
+
+Closes the corresponding flipper.
+
+<a name="flippertoggle-flipperid--and-instancetoggle"></a>
+#### `flipper.toggle( flipperId )` and `instance.toggle()`
+
+Toggles the corresponding flipper.
+
+<a name="flipperall"></a>
+#### `flipper.all`
+
+A map of all flipper instances, organized by their `flipperId`.
+
+<a name="angular-flipper"></a>
+## Angular Flipper
+
+Angular flipper provides some directives which should typically be all you need to interact with flipper. The directives are documented below. However, you may also interact with flipper more programmatically by using `flipperService` directly.
+
+_For documentation on the Angular `flipperService`, refer to the [vanilla flipper API](#flipper-api), which is exactly the same as the Angular `flipperService`. The only difference is that the angular service is called `flipperService` instead of `flipper`._
+
+<a name="flipper-directive"></a>
+### `flipper` directive
+
+The `flipper` directive automatically creates an instance of flipper for you, allowing you to optionally pass flipper options via the `[flipper]` attribute. This may typically be the only directive you need.
+
+```html
+<!-- HTML -->
+<div flipper></div>
+
+<!-- Pass options to flipper. -->
+<div flipper="{...}"></div>
+```
+
+[See available options above](#flipper-options).
+
+<a name="open-flipper-directive"></a>
+### `open-flipper` directive
+
+Use the `openElements` option to bind an open click event to any elements _inside_ of a flipper element. Use the `open-flipper` directive when you need to bind an open click event to any elements _outside_ of a flipper element.
+
+```html
+<div flipper="{id: 'my-flipper'}">...</div>
+...
+<button open-flipper="my-flipper" type="button">Open my-flipper</button>
+```
+
+<a name="close-flipper-directive"></a>
+### `close-flipper` directive
+
+Use the `closeElements` option to bind a close click event to any elements _inside_ of a flipper element. Use the `close-flipper` directive when you need to bind a close click event to any elements _outside_ of a flipper element.
+
+```html
+<div flipper="{id: 'my-flipper'}">...</div>
+...
+<button close-flipper="my-flipper" type="button">Close my-flipper</button>
+```
+
+<a name="toggle-flipper-directive"></a>
+### `toggle-flipper` directive
+
+Use the `toggle-flipper` directive to bind a toggle click event to any DOM elements.
+
+```html
+<div flipper="{id: 'my-flipper'}">...</div>
+...
+<button toggle-flipper="my-flipper" type="button">Toggle my-flipper</button>
 ```
 
 <a name="questions-comments-concerns"></a>
 ## Questions, comments, concerns
 
-Pull requests and bugs are more than welcome, as are questions and feedback. Please include as much information as possible with each bug, question, and pull request.
+Pull requests and bugs are more than welcome, as are questions and feedback. Please include as much information as possible with each bug, pull request, and other inquiries. Your help is much appreciated!

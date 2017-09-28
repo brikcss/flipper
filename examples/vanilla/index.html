@@ -1,41 +1,25 @@
 <!DOCTYPE html>
-<html ng-app="demo">
+<html>
 <head>
-	<title>Flipper Angular Demo</title>
+	<title>Flipper Demo</title>
 	<link rel="stylesheet" type="text/css" href="../flipper.css">
 </head>
 <body>
 	<div class="container">
 		<div class="intro">
-			<h1>Flipper Angular</h1>
-			<div>Flipper Angular includes the following:</div>
-			<ul>
-				<li><em><code ng-non-bindable>flipper="{{options}}"</code> directive:</em> Creates a flipper instance and binds it to <code>$element</code>, where <code>$scope.flipper</code> is the options object.</li>
-				<li>With the <code>addClick</code> and <code>closeButtons</code> options, you can have the flipper plugin automatically add (and destroy) default open and close events.</li>
-				<li>When you want more granular control, you can use the <code>open</code>, <code>close</code>, and/or <code>toggle</code> directives.
-					<ul>
-						<li><em><code ng-non-bindable>open-flipper="{{id}}"</code> directive:</em> Opens the flipper which matches <code>id</code>.</li>
-						<li><em><code ng-non-bindable>close-flipper="{{id}}"</code> directive:</em> Closes the flipper which matches <code>id</code>.</li>
-						<li><em><code ng-non-bindable>toggle-flipper="{{id}}"</code> directive:</em> Toggles the flipper which matches <code>id</code>.</li>
-					</ul>
-				</li>
-				<li><em><code>flipperService</code></em> also allows you to programatically create and interact with flippers.</li>
-			</ul>
+			<h1>Vanilla JS Flipper</h1>
+			<div>This demo shows flippers in columns to see how flippers interact with elements above and below it.</div>
 		</div>
 
 		<div class="columns">
 			<div class="column">
 				<div>
-					<div>You can programatically bind buttons outside of a flipper to open/close/toggle a flipper:</div>
-					<!-- <input type="text" name="flipper" ng-model="flipperName" ng-init="flipperName = 'inlineFlipper'"> -->
-					<p>
-						<button toggle-flipper="inlineFlipper" type="button">Click me to toggle the first flipper.</button>
-						<button open-flipper="inlineFlipper" type="button">Click me to open the first flipper.</button>
-						<button close-flipper="inlineFlipper" type="button">Click me to close the first flipper.</button>
-					</p>
+					<button class="flipper__toggle" type="button">Click me to toggle the first flipper.</button>
+					<button class="flipper__destroy" type="button">Click me to destroy the first flipper.</button>
+					<button class="flipper__init" type="button" style="display: none;">Click me to re-init the first flipper.</button>
 				</div>
 				<!-- Normal flipper. -->
-				<div class="flipper" flipper="{id: 'inlineFlipper', addClick: true, closeButtons: '.flipper__close'}">
+				<div class="flipper" data-flipper-id="inlineFlipper">
 					<div>
 						<div class="padded">
 							<h2>Inline flipper (default)</h2>
@@ -51,7 +35,7 @@
 				</div>
 
 				<!-- Normal flipper with equal height sides. -->
-				<div class="flipper flipper--equal-height" flipper="{addClick: true, closeButtons: '.flipper__close'}">
+				<div class="flipper flipper--equal-height" data-flipper-id="unequalHeightFlipper">
 					<div class="flipper__front">
 						<div class="padded">
 							<h2>Equal Height Flipper</h2>
@@ -69,7 +53,7 @@
 				</div>
 
 				<!-- Modal flipper. -->
-				<div class="flipper" flipper="{type: 'modal', addClick: true, closeButtons: '.flipper__close'}">
+				<div class="flipper" data-flipper-id="flipperModal" data-flipper-type="modal">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -88,7 +72,7 @@
 
 			<div class="column">
 				<!-- Normal flipper with equal height sides. -->
-				<div class="flipper flipper--equal-height" flipper="{addClick: true, closeButtons: '.flipper__close'}">
+				<div class="flipper flipper--equal-height" data-flipper-id="unequalHeightFlipper">
 					<div class="flipper__front">
 						<div class="padded">
 							<h2>Equal Height Flipper</h2>
@@ -105,7 +89,7 @@
 				</div>
 
 				<!-- Modal flipper. -->
-				<div class="flipper" flipper="{type: 'modal', addClick: true, closeButtons: '.flipper__close'}">
+				<div class="flipper" data-flipper-id="flipperModal" data-flipper-type="modal">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -122,7 +106,7 @@
 				</div>
 
 				<!-- Normal flipper. -->
-				<div class="flipper" flipper="{addClick: true, closeButtons: '.flipper__close'}">
+				<div class="flipper" data-flipper-id="inlineFlipper">
 					<div>
 						<div class="padded">
 							<h2>Inline flipper (default)</h2>
@@ -142,7 +126,7 @@
 
 			<div class="column">
 				<!-- Modal flipper. -->
-				<div class="flipper" flipper="{type: 'modal', addClick: true, closeButtons: '.flipper__close'}">
+				<div class="flipper" data-flipper-id="flipperModal" data-flipper-type="modal">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -159,7 +143,7 @@
 				</div>
 
 				<!-- Normal flipper. -->
-				<div class="flipper" flipper="{addClick: true, closeButtons: '.flipper__close'}">
+				<div class="flipper" data-flipper-id="inlineFlipper">
 					<div>
 						<div class="padded">
 							<h2>Inline flipper (default)</h2>
@@ -177,7 +161,7 @@
 				</div>
 
 				<!-- Normal flipper with equal height sides. -->
-				<div class="flipper flipper--equal-height" flipper="{addClick: true, closeButtons: '.flipper__close'}">
+				<div class="flipper flipper--equal-height" data-flipper-id="unequalHeightFlipper">
 					<div class="flipper__front">
 						<div class="padded">
 							<h2>Equal Height Flipper</h2>
@@ -197,14 +181,51 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
-	<script type="text/javascript" src="../angular/flipper-module.js"></script>
-	<script type="text/javascript" src="../angular/flipper-service.js"></script>
-	<script type="text/javascript" src="../angular/flipper-directives.js"></script>
+	<script type="text/javascript" src="../vanilla/flipper.js"></script>
 	<script type="text/javascript">
-		(function () {
-			angular.module('demo', ['brikcss.flipper']);
-		})();
+		/**
+		 * How to instantiate flipper.
+		 */
+		// 1. Instantiate on a dom element.
+		// flipper.create(document.querySelectorAll('.flipper'));
+		// 2. Instantiate on a selector. The selector will do `querySelectorAll` and instantiate each element.
+		// flipper.create('.flipper');
+
+		/**
+		 * How to dynamically set/pass options.
+		 */
+		flipper.create('.flipper', function (flipper) {
+			// The flipper object gives you access to flipper.$element and other default settings.
+			return {
+				id: flipper.$element.dataset.flipperId,
+				type: flipper.$element.dataset.flipperType
+			};
+		});
+
+		/**
+		 * Add a flipper toggle button.
+		 */
+		document.querySelector('.flipper__toggle').addEventListener('click', function () {
+			flipper.toggle('inlineFlipper');
+		});
+
+		/**
+		 * Add a flipper destroy button.
+		 */
+		document.querySelector('.flipper__destroy').addEventListener('click', function () {
+			flipper.destroy('inlineFlipper');
+			document.querySelector('.flipper__init').style.display = 'block';
+			document.querySelector('.flipper__destroy').style.display = 'none';
+		});
+
+		/**
+		 * Add a flipper reinit button.
+		 */
+		document.querySelector('.flipper__init').addEventListener('click', function () {
+			flipper.create('[data-flipper-id="inlineFlipper"]', {id: 'inlineFlipper'});
+			document.querySelector('.flipper__init').style.display = 'none';
+			document.querySelector('.flipper__destroy').style.display = 'block';
+		});
 	</script>
 </body>
 </html>
