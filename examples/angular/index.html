@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="demo">
 <head>
-	<title>Flipper Demo</title>
+	<title>Flipper Angular Demo</title>
 	<link rel="stylesheet" type="text/css" href="../flipper.css">
 </head>
 <body>
 	<div class="container">
 		<div class="intro">
-			<h1>Flipper</h1>
-			<div>Flipper is a front end web module that flips things in style. Types of flippers:</div>
-			<ul>
-				<li><em>Inline flipper:</em> Flips in place. Height is <em>not</em> set, so front/back sides can be unequal. To make it equal height, simply give the main <code>.flipper</code> element height.</li>
-				<li><em>Flipper modal:</em> Flips open to a modal dialog.</li>
-			</ul>
+			<h1>Flipper Angular</h1>
 			<div>This demo shows flippers in columns to see how flippers interact with elements above and below it.</div>
 		</div>
 
 		<div class="columns">
 			<div class="column">
 				<div>
-					<button class="flipper__toggle" type="button">Click me to toggle the first flipper.</button>
+					<p>
+						<button toggle-flipper="inlineFlipper" type="button">Click me to toggle the first flipper.</button>
+						<button open-flipper="inlineFlipper" type="button">Click me to open the first flipper.</button>
+						<button close-flipper="inlineFlipper" type="button">Click me to close the first flipper.</button>
+					</p>
 				</div>
 				<!-- Normal flipper. -->
-				<div class="flipper" data-flipper-id="inlineFlipper">
+				<div class="flipper" flipper="{id: 'inlineFlipper'}">
 					<div>
 						<div class="padded">
 							<h2>Inline flipper (default)</h2>
@@ -38,7 +37,7 @@
 				</div>
 
 				<!-- Normal flipper with equal height sides. -->
-				<div class="flipper flipper--equal-height" data-flipper-id="unequalHeightFlipper">
+				<div class="flipper flipper--equal-height" flipper>
 					<div class="flipper__front">
 						<div class="padded">
 							<h2>Equal Height Flipper</h2>
@@ -56,7 +55,7 @@
 				</div>
 
 				<!-- Modal flipper. -->
-				<div class="flipper" data-flipper-id="flipperModal" data-flipper-type="modal">
+				<div class="flipper" flipper="{type: 'modal'}">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -75,7 +74,7 @@
 
 			<div class="column">
 				<!-- Normal flipper with equal height sides. -->
-				<div class="flipper flipper--equal-height" data-flipper-id="unequalHeightFlipper">
+				<div class="flipper flipper--equal-height" flipper>
 					<div class="flipper__front">
 						<div class="padded">
 							<h2>Equal Height Flipper</h2>
@@ -92,7 +91,7 @@
 				</div>
 
 				<!-- Modal flipper. -->
-				<div class="flipper" data-flipper-id="flipperModal" data-flipper-type="modal">
+				<div class="flipper" flipper="{type: 'modal'}">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -109,7 +108,7 @@
 				</div>
 
 				<!-- Normal flipper. -->
-				<div class="flipper" data-flipper-id="inlineFlipper">
+				<div class="flipper" flipper>
 					<div>
 						<div class="padded">
 							<h2>Inline flipper (default)</h2>
@@ -129,7 +128,7 @@
 
 			<div class="column">
 				<!-- Modal flipper. -->
-				<div class="flipper" data-flipper-id="flipperModal" data-flipper-type="modal">
+				<div class="flipper" flipper="{type: 'modal'}">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -146,7 +145,7 @@
 				</div>
 
 				<!-- Normal flipper. -->
-				<div class="flipper" data-flipper-id="inlineFlipper">
+				<div class="flipper" flipper>
 					<div>
 						<div class="padded">
 							<h2>Inline flipper (default)</h2>
@@ -164,7 +163,7 @@
 				</div>
 
 				<!-- Normal flipper with equal height sides. -->
-				<div class="flipper flipper--equal-height" data-flipper-id="unequalHeightFlipper">
+				<div class="flipper flipper--equal-height" flipper>
 					<div class="flipper__front">
 						<div class="padded">
 							<h2>Equal Height Flipper</h2>
@@ -184,35 +183,14 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="../flipper.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+	<script type="text/javascript" src="../angular/flipper-module.js"></script>
+	<script type="text/javascript" src="../angular/flipper-service.js"></script>
+	<script type="text/javascript" src="../angular/flipper-directives.js"></script>
 	<script type="text/javascript">
-		/**
-		 * How to instantiate flipper.
-		 */
-		// 1. Instantiate on a dom element.
-		// flipper.create(document.querySelectorAll('.flipper'), {addClick: true, closeButtons: '.flipper__close'});
-		// 2. Instantiate on a selector. The selector will do `querySelectorAll` and instantiate each element.
-		// flipper.create('.flipper', {addClick: true, closeButtons: '.flipper__close'});
-
-		/**
-		 * How to dynamically set/pass options.
-		 */
-		flipper.create('.flipper', function (flipper) {
-			// The flipper object gives you access to flipper.$element and other default settings.
-			return {
-				id: flipper.$element.dataset.flipperId,
-				type: flipper.$element.dataset.flipperType || 'inline',
-				addClick: true,
-				closeButtons: '.flipper__close'
-			};
-		});
-
-		/**
-		 * Add a flipper toggle button.
-		 */
-		document.querySelector('.flipper__toggle').addEventListener('click', function () {
-			flipper.toggle('inlineFlipper')
-		});
+		(function () {
+			angular.module('demo', ['brikcss.flipper']);
+		})();
 	</script>
 </body>
 </html>

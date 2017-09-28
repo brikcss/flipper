@@ -1,9 +1,9 @@
-/** ====================================================================
- * flipper.scss
- * ------------
- * @description SASS mixin to apply flipper anywhere.
- * @layer component
-===================================================================== */
+// ---------------------------------------------------------------------
+// flipper.scss
+// ------------
+// @description SASS mixin to apply flipper anywhere.
+// @layer component
+// ---------------------------------------------------------------------
 
 
 // Flipper mixin for the plugin.
@@ -22,6 +22,30 @@
 
 			.#{$base}--flipped & {
 				transform: rotateY(#{getFlipperTransformValue($flipFromRight, false)});
+
+				&--modal {
+				}
+			}
+
+			&--modal {
+				display: flex;
+				pointer-events: initial;
+				will-change: left, top, height, width, transform, box-shadow;
+				transform: rotateY(0deg);
+				transition: left $duration, top $duration, height $duration, width $duration, transform $duration, box-shadow $duration;
+				transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
+
+				&.#{$base}--flipped {
+					left: calc(50% - #{map-get($modal, width) / 2}) !important;
+					top: calc(50% - #{map-get($modal, height) / 2}) !important;
+					height: map-get($modal, height) !important;
+					width: map-get($modal, width) !important;
+					transform: rotateY(#{getFlipperTransformValue($flipFromRight, false)});
+
+					.#{$base}__back {
+						box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);
+					}
+				}
 			}
 		}
 
@@ -54,28 +78,8 @@
 			.#{$base}--flipped & {
 				max-height: 100vh !important;
 			}
-		} // Unequal height flippers.
-		&--unequal-height {
-			height: auto !important;
-
-			.#{$base}__front {
-				max-height: 100vh !important;
-				transition: max-height 0s ($duration * 0.4);
-			}
-			.#{$base}__back {
-				max-height: 0 !important;
-				transition: max-height 0s ($duration * 0.4);
-			}
-			&.#{$base}--flipped {
-				.#{$base}__front {
-					max-height: 0;
-				}
-
-				.#{$base}__back {
-					max-height: 100vh;
-				}
-			}
-		} // Flipper modals.
+		}
+		// Flipper modals.
 		&__modals {
 			pointer-events: none;
 			will-change: auto;
@@ -88,28 +92,6 @@
 				top: 0;
 				right: 0;
 				z-index: 10;
-			}
-		}
-
-		&__modal {
-			display: flex;
-			pointer-events: initial;
-			will-change: left, top, height, width, transform, box-shadow;
-			transform: rotateY(0deg);
-			transform-style: preserve-3d;
-			transition: left $duration, top $duration, height $duration, width $duration, transform $duration, box-shadow $duration;
-			transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
-
-			&.#{$base}--flipped {
-				left: calc(50% - #{map-get($modal, width) / 2}) !important;
-				top: calc(50% - #{map-get($modal, height) / 2}) !important;
-				height: map-get($modal, height) !important;
-				width: map-get($modal, width) !important;
-				transform: rotateY(#{getFlipperTransformValue($flipFromRight, false)});
-
-				.#{$base}__back {
-					box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);
-				}
 			}
 		}
 	}

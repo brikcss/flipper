@@ -1,27 +1,41 @@
 {
-  "name": "@brikcss/flipper",
-  "version": "0.0.1",
-  "description": "Flipper is a front end web module that flips things. In style. Flipper can flip an element in place or open it up to a modal dialog.",
-  "main": "dist/flipper.min.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node-sass test/main.scss test/flipper.css && node-sass -w test/main.scss test/flipper.css & browser-sync start --config .browsersync.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/brikcss/flipper.git"
-  },
-  "author": "The Zimmee <thezimmee@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/brikcss/flipper/issues"
-  },
-  "homepage": "https://github.com/brikcss/flipper#readme",
-  "devDependencies": {
-    "autoprefixer": "^7.1.4",
-    "browser-sync": "^2.18.13",
-    "node-sass": "^4.5.3",
-    "postcss": "^6.0.12",
-    "postcss-scss": "^1.0.2"
-  }
+	"name": "@brikcss/flipper",
+	"version": "0.1.0",
+	"description": "Flipper is a front end web module that flips things. In style. Flipper can flip an element in place or open it up to a modal dialog.",
+	"keywords": [
+		"flipper",
+		"brikcss",
+		"front end library",
+		"css",
+		"js",
+		"modal",
+		"dialog",
+		"popup",
+		"flip card",
+		"component",
+		"module"
+	],
+	"main": "src/vanilla/flipper.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "node-sass examples/main.scss examples/flipper.css --output-style=expanded --indent-type=tab indent-width=1 && node-sass -w examples/main.scss examples/flipper.css & browser-sync start --config .browsersync.js",
+		"build": "$(echo \"@import 'src/sass/flipper'; @include flipper();\" > temp.scss) && node-sass ./temp.scss --output-style=expanded --indent-type=tab --indent-width=1 src/css/flipper.css && rm temp.scss"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/brikcss/flipper.git"
+	},
+	"author": "The Zimmee <thezimmee@gmail.com>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/brikcss/flipper/issues"
+	},
+	"homepage": "https://github.com/brikcss/flipper#readme",
+	"devDependencies": {
+		"autoprefixer": "^7.1.4",
+		"browser-sync": "^2.18.13",
+		"node-sass": "^4.5.3",
+		"postcss": "^6.0.12",
+		"postcss-scss": "^1.0.2"
+	}
 }

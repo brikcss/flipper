@@ -19,10 +19,10 @@ module.exports = {
 		}
 	},
 	files: [
-		'./test/vanilla/index.html',
-		'./test/angular/index.html',
-		'./test/flipper.css',
-		'./src/flipper.js',
+		'./examples/vanilla/index.html',
+		'./examples/angular/index.html',
+		'./examples/flipper.css',
+		'./src/vanilla/flipper.js',
 		'./src/angular/*.js'
 	],
 	watchTask: true,
@@ -31,7 +31,7 @@ module.exports = {
 		ignoreInitial: true
 	}, // Options passed to chokidar.
 	server: {
-		baseDir: ['test', 'src'],
+		baseDir: ['examples', 'src'],
 		directory: true
 	},
 	proxy: false,

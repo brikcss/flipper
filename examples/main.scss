@@ -5,14 +5,13 @@
 ===================================================================== */
 
 
-/** [[START]] Core layer styles. */
+/** [[START]] Core layer. */
+@import '../src/sass/flipper';
 // Flipper alone does not produce any CSS... it must be included with @include.
-@import '../src/flipper';
 @include flipper();
 /** [[END]] */
 
-
-/** [[START]] View layer styles. */
+/** [[START]] View layer. */
 * {
 	box-sizing: border-box;
 }

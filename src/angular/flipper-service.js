@@ -17,31 +17,30 @@
 				close: closeFlipper,
 				toggle: toggleFlipper,
 				destroy: destroyFlipper,
-				flippers: {}
+				all: {}
 			};
-			var defaults = {
-				type: 'inline', // 'inline'|'modal'
-				addClick: false, // Adds open click event to $front element.
-				closeButtons: '', // Selector to add close click event to.
-				unequalHeight: false, // If you want front/back sides to have unequal height.
-				animationTime: 300, // milliseconds.
-				innerClass: '', // Class to add to $inner element.
-				flipperClass: 'flipper', // Base class for flipper element.
-			};
+			// Default flipper options.
+			var defaults = {};
+			defaults.type = 'inline'; // 'inline'|'modal'
+			defaults.animationTime = 300; // milliseconds.
+			defaults.innerClass = ''; // Class to add to $inner element.
+			defaults.flipperClass = 'flipper'; // Base class for flipper element.
 			// Provide CSS classes as a setting so they can be overridden.
 			defaults.classes = {
 				main: defaults.flipperClass,
 				inner: defaults.flipperClass + '__container',
 				modals: defaults.flipperClass + '__modals',
-				modal: defaults.flipperClass + '__modal',
 				front: defaults.flipperClass + '__front',
 				back: defaults.flipperClass + '__back',
+				close: defaults.flipperClass + '__close',
 				mods: {
+					modal: defaults.flipperClass + '__container--modal',
 					flipped: defaults.flipperClass + '--flipped',
-					unequal: defaults.flipperClass + '--unequal-height',
 					modalsActive: defaults.flipperClass + '__modals--active'
 				},
 			};
+			defaults.openElements = '.' + defaults.classes.front; // Selector to add open click event to.
+			defaults.closeElements = '.' + defaults.classes.close; // Selector to add close click event to.
 			var nextFlipperId = 0;
 			var $flipperModals = document.querySelector(defaults.classes.modals);
 
@@ -51,7 +50,7 @@
 				if (!$flipperModals) {
 					$flipperModals = document.createElement('div');
 				}
-				$flipperModals.classList.add('flipper__modals');
+				$flipperModals.classList.add(defaults.classes.modals);
 				document.body.appendChild($flipperModals);
 			})();
 
@@ -78,7 +77,7 @@
 					return false;
 				}
 				// Iterate through elements to create a flipper for each.
-				return elements.forEach(function (element, i) {
+				return elements.forEach(function (element) {
 					// Merge options with defaults and create the flipper instance.
 					return createFlipper(element, options);
 				});
@@ -96,7 +95,14 @@
 				// Allow user to pass a function/callback to dynamically create options.
 				if (typeof options === 'function') {
 					flipper = Object.assign({$element: element}, defaults);
-					flipper = Object.assign(flipper, options(flipper));
+					options = options(flipper);
+					// Don't allow undefined or null values.
+					Object.keys(options).forEach(function (key) {
+						if (options[key] === undefined || options[key] === null) {
+							delete options[key];
+						}
+					});
+					flipper = Object.assign(flipper, options);
 				} else {
 					flipper = Object.assign({$element: element}, defaults, options);
 				}
@@ -111,7 +117,7 @@
 					nextFlipperId += 1;
 				}
 				// If flipper ID already exists, create a more unique ID.
-				if (service.flippers[flipper.id]) {
+				if (service.all[flipper.id]) {
 					flipper.id = flipper.id + '__' + nextFlipperId;
 					nextFlipperId += 1;
 				}
@@ -122,7 +128,7 @@
 				// Add flipper state.
 				flipper.isOpen = false;
 				// Cache flipper.
-				service.flippers[flipper.id] = flipper;
+				service.all[flipper.id] = flipper;
 				return flipper;
 			}
 
@@ -136,26 +142,28 @@
 				// Add flipper id to $element.
 				flipper.$element.dataset.flipperId = flipper.id;
 				// Cache important flipper DOM elements.
-				flipper.$front = flipper.$element.children[0];
-				flipper.$back = flipper.$element.children[1];
-				flipper.$inner = document.createElement('div');
+				flipper.$front = flipper.$element.querySelector('.' + flipper.classes.front) || flipper.$element.children[0];
+				flipper.$back = flipper.$element.querySelector('.' + flipper.classes.back) || flipper.$element.children[1];
+				flipper.$inner = flipper.$element.querySelector('.' + flipper.classes.inner) || document.createElement('div');
 				// Add flipper classes.
 				flipper.$element.classList.add(flipper.classes.main);
 				flipper.$element.classList.add(flipper.classes.main + '--' + flipper.type);
-				flipper.$inner.classList.add(flipper.type === 'modal' ? flipper.classes.modal : flipper.classes.inner);
+				flipper.$inner.classList.add(flipper.classes.inner);
 				flipper.$front.classList.add(flipper.classes.front);
 				flipper.$back.classList.add(flipper.classes.back);
-				if (flipper.unequalHeight) {
-					flipper.$element.classList.add(flipper.classes.mods.unequal);
+				if (flipper.type === 'modal') {
+					flipper.$inner.classList.add(flipper.classes.mods.modal);
 				}
 				if (flipper.innerClass) {
 					flipper.$inner.classList.add(flipper.innerClass);
 				}
 				// Create element's inner dom.
-				for (var i = 0; i < flipper.$element.children.length;) {
-					flipper.$inner.appendChild(flipper.$element.children[0]);
+				if (!flipper.$element.querySelector('.' + flipper.classes.inner)) {
+					for (var i = 0; i < flipper.$element.children.length;) {
+						flipper.$inner.appendChild(flipper.$element.children[0]);
+					}
+					flipper.$element.appendChild(flipper.$inner);
 				}
-				flipper.$element.appendChild(flipper.$inner);
 				return flipper;
 			}
 
@@ -196,13 +204,17 @@
 					flipper.$inner.addEventListener('click', flipper.stopPropagation);
 				}
 				// Add open click event.
-				if (flipper.addClick) {
-					flipper.$front.addEventListener('click', flipper.open);
+				if (flipper.openElements) {
+					flipper.$openElements = flipper.$element.querySelectorAll(flipper.openElements);
+					flipper.$openElements.forEach(function (element) {
+						element.addEventListener('click', flipper.open);
+					});
 				}
 				// Add close click event.
-				if (flipper.closeButtons) {
-					flipper.$element.querySelectorAll(flipper.closeButtons).forEach(function(button) {
-						button.addEventListener('click', flipper.close);
+				if (flipper.closeElements) {
+					flipper.$closeElements = flipper.$element.querySelectorAll(flipper.closeElements);
+					flipper.$element.querySelectorAll(flipper.closeElements).forEach(function(button) {
+								button.addEventListener('click', flipper.close);
 					});
 				}
 			}
@@ -213,7 +225,11 @@
 			 * @param   {string}  id  Flipper id.
 			 */
 			function openFlipper(id) {
-				var flipper = service.flippers[id];
+				var flipper = service.all[id];
+				// Make sure flipper exists.
+				if (!flipper) {
+					return false;
+				}
 				// Update flipper state.
 				flipper.isOpen = true;
 				// Logic for modal flipper.
@@ -262,7 +278,11 @@
 				if (!id && service.activeFlipperModal && service.activeFlipperModal.type === 'modal') {
 					id = service.activeFlipperModal.id;
 				}
-				var flipper = service.flippers[id];
+				var flipper = service.all[id];
+				// Make sure flipper exists.
+				if (!flipper) {
+					return false;
+				}
 				// Update flipper state.
 				flipper.isOpen = false;
 				// Handle logic for flipper modal.
@@ -303,7 +323,11 @@
 			 * @return  {object}  Flipper object.
 			 */
 			function toggleFlipper(id) {
-				var flipper = service.flippers[id];
+				var flipper = service.all[id];
+				// Make sure flipper exists.
+				if (!flipper) {
+					return false;
+				}
 				if (flipper.isOpen) {
 					flipper.close();
 				} else {
@@ -318,7 +342,7 @@
 			 * @param   {string}  id  Flipper id.
 			 */
 			function destroyFlipper(id) {
-				var flipper = service.flippers[id];
+				var flipper = service.all[id];
 				// Make sure flipper exists.
 				if (!flipper) {
 					return false;
@@ -332,17 +356,19 @@
 					flipper.$inner.removeEventListener('click', flipper.stopPropagation);
 				}
 				// Remove open click event.
-				if (flipper.addClick) {
-					flipper.$front.removeEventListener('click', flipper.open);
+				if (flipper.$openElements) {
+					flipper.$openElements.forEach(function(element) {
+						element.removeEventListener('click', flipper.open);
+					});
 				}
 				// Remove close click event.
-				if (flipper.closeButtons) {
-					flipper.$element.querySelectorAll(flipper.closeButtons).forEach(function(button) {
-						button.removeEventListener('click', flipper.close);
+				if (flipper.$closeElements) {
+					flipper.$closeElements.forEach(function(element) {
+						element.removeEventListener('click', flipper.close);
 					});
 				}
 				// Remove from service cache.
-				delete service.flippers[id];
+				delete service.all[id];
 			}
 
 			return service;
