@@ -8,15 +8,6 @@
 
 // eslint-disable-next-line
 var flipper = (function () {
-	// Service object contains methods and props to be publicly returned.
-	var service = {
-		create: createFlippers,
-		open: openFlipper,
-		close: closeFlipper,
-		toggle: toggleFlipper,
-		destroy: destroyFlipper,
-		all: {}
-	};
 	// Default flipper options.
 	var defaults = {};
 	defaults.type = 'inline'; // 'inline'|'modal'
@@ -39,6 +30,16 @@ var flipper = (function () {
 	};
 	defaults.openElements = '.' + defaults.classes.front; // Selector to add open click event to.
 	defaults.closeElements = '.' + defaults.classes.close; // Selector to add close click event to.
+	// Service object contains methods and props to be publicly returned.
+	var service = {
+		create: createFlippers,
+		open: openFlipper,
+		close: closeFlipper,
+		toggle: toggleFlipper,
+		destroy: destroyFlipper,
+		all: {},
+		defaults: defaults
+	};
 	var nextFlipperId = 0;
 	var $flipperModals = document.querySelector(defaults.classes.modals);
 
