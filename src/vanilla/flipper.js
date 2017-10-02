@@ -11,7 +11,7 @@ var flipper = (function () {
 	// Default flipper options.
 	var defaults = {};
 	defaults.type = 'inline'; // 'inline'|'modal'
-	defaults.addDimensions = true; // Add height, width
+	defaults.addDimensions = false; // Add height, width to main element while open.
 	defaults.animationTime = 300; // milliseconds.
 	defaults.innerClass = ''; // Class to add to $inner element.
 	defaults.flipperClass = 'flipper'; // Base class for flipper element.

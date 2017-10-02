@@ -171,6 +171,11 @@ The flipper API is exactly the same for the vanilla JS plugin as it is for the A
 			<td>(<code><em>'inline'</em>|'modal'</code>) Sets the type of flipper. An inline flipper flips in place, while a modal flipper flips open as it transitions to a modal dialog.</td>
 		</tr>
 		<tr>
+			<td><code>addDimensions</code></td>
+			<td><code>boolean</code></td>
+			<td>(<code><em>false</em>|true</code>) When true, adds <code>height</code> and <code>width</code> to main flipper $element. This is helpful for flipper modals, to keep main $element in place while flipper modal is open.</td>
+		</tr>
+		<tr>
 			<td><code>openElements</code></td>
 			<td><code>string</code></td>
 			<td>(<code><em>'.flipper__front'</em></code>) Binds an open click event <em>to any element(s) inside of the flipper element</em> which match the selector you provide.</td>
