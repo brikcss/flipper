@@ -56,11 +56,11 @@ npm install @brikcss/flipper
 
 3. Include the styles:
 
-	Include `src/flipper.scss` if you want to customize anything:
+	Include `src/sass/flipper.scss` if you want to customize anything:
 
 	```sass
 	// main.scss
-	@import 'flipper.scss';
+	@import 'src/sass/flipper.scss';
 
 	// @include the flipper mixin wherever you want your flipper classes.
 	@include flipper(/* Mixin settings go here */);
@@ -175,7 +175,7 @@ The flipper API is exactly the same for the vanilla JS plugin as it is for the A
 		<tr>
 			<td><code>flipperClass</code></td>
 			<td><code>string</code></td>
-			<td>(<code><em>'flipper'</em></code>) Sets the base class prefix. You will need this if you changed the base class in the `flipper.scss` mixin.</td>
+			<td>(<code><em>'flipper'</em></code>) Sets the base class prefix. You will need this if you changed the base class in the mixin in `flipper.scss`.</td>
 		</tr>
 		<tr>
 			<td><code>classes</code></td>
