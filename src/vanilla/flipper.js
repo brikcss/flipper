@@ -38,7 +38,7 @@ var flipper = (function () {
 		toggle: toggleFlipper,
 		destroy: destroyFlipper,
 		all: {},
-		defaults: defaults
+		setFlipperClass: setFlipperClass
 	};
 	var nextFlipperId = 0;
 	var $flipperModals = document.querySelector(defaults.classes.modals);
@@ -54,6 +54,34 @@ var flipper = (function () {
 	})();
 
 	/**
+	 * Helpful function to set base class in a single call.
+	 * @method  setFlipperClass
+	 * @param   {string}  baseClass  Base class for flipper.
+	 * @return  {object}  flipperService.
+	 */
+	function setFlipperClass(baseClass) {
+		defaults.flipperClass = baseClass || defaults.flipperClass; // Base class for flipper element.
+		// Provide CSS classes as a setting so they can be overridden.
+		defaults.classes = {
+			main: baseClass,
+			inner: baseClass + '__container',
+			modals: baseClass + '__modals',
+			front: baseClass + '__front',
+			back: baseClass + '__back',
+			close: baseClass + '__close',
+			mods: {
+				modal: baseClass + '__container--modal',
+				flipped: baseClass + '--flipped',
+				modalsActive: baseClass + '__modals--active'
+			},
+		};
+		defaults.openElements = '.' + defaults.classes.front; // Selector to add open click event to.
+		defaults.closeElements = '.' + defaults.classes.close; // Selector to add close click event to.
+
+		return service;
+	}
+
+			/**
 	 * Create flipper(s) from element(s).
 	 * @method  createFlippers
 	 * @param  {string|HTMLElement|Array of HTMLElements}  elements  String selector or DOM element(s).
