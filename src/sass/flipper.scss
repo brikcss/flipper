@@ -98,7 +98,7 @@
 }
 
 @function getFlipperTransformValue($flipFromRight: true, $open: true) {
-	@if ($flipFromRight==true and $open==true) or ($flipFromRight !=true and $open !=true) {
+	@if ($flipFromRight == true and $open == true) or ($flipFromRight != true and $open != true) {
 		@return 180deg;
 	} @else {
 		@return -180deg;

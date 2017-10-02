@@ -35,10 +35,9 @@ npm install @brikcss/flipper
 <a name="usage"></a>
 ## Usage
 
-1. Pick your flavor: _vanilla JS_ or _AngularJS_.
-2. Include the script:
+1. Pick your JS flavor (vanilla or AngularJS) and include the scripts:
 
-	For vanilla:
+	For vanilla JS:
 
 	```html
 	<!-- index.html -->
@@ -54,9 +53,11 @@ npm install @brikcss/flipper
 	<script src="src/angular/flipper-directives.js"></script>
 	```
 
-3. Include the styles:
+2. Pick your CSS flavor (SASS, LESS, or vanilla) and include the styles:
 
-	Include `src/sass/flipper.scss` if you want to customize anything:
+	_Note: The SASS/LESS flavors give you the added flexibility of being able to customize flipper classes and other settings, which you do not get with the vanilla CSS flavor, which uses all default classes and settings._
+
+	For SASS:
 
 	```sass
 	// main.scss
@@ -76,19 +77,36 @@ npm install @brikcss/flipper
 	);
 	```
 
-	OR
+	For LESS:
 
-	Include `dist/flipper.css` if you just want all default flipper classes and settings:
+	```less
+	// main.less
+	@import 'src/less/flipper.less';
+
+	// Include the flipper mixin wherever you want your flipper classes.
+	.mix-flipper(/* Mixin settings go here */);
+		// These are the default flipper mixin settings.
+		@base: flipper, // This will be the base flipper class.
+		@flipFromRight: true, // Whether it will flip from right or left.
+		@duration: 0.3s, // Duration of transition.
+		@modalHeight: 400px, // height of flipper modal.
+		@modalWidth: 400px, // width of flipper modal.
+		@bgFront: #ccc, // default background-color of flipper front side.
+		@bgBack: #aaa) // default background-color of flipper back side.
+	);
+	```
+
+	For vanilla CSS:
 
 	```html
 	<link rel="stylesheet" type="text/css" href="flipper.css">
 	```
 
-4. Create a flipper instance:
+3. Create a flipper instance:
 
 	_Each flipper element must have at least two immediate child elements._ Flipper will always use the first immediate child as the flipper's front side and the second immediate child as the back side.
 
-	For vanilla:
+	For vanilla JS:
 
 	```html
 	<!-- HTML: -->
@@ -108,7 +126,7 @@ npm install @brikcss/flipper
 	flipper.create(document.querySelectorAll('.my-flipper'), options);
 	```
 
-	For Angular:
+	For AngularJS:
 
 	```html
 	<!-- This instantiates flipper with all flipper defaults. -->
