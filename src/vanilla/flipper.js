@@ -11,6 +11,7 @@ var flipper = (function () {
 	// Default flipper options.
 	var defaults = {};
 	defaults.type = 'inline'; // 'inline'|'modal'
+	defaults.addDimensions = true; // Add height, width
 	defaults.animationTime = 300; // milliseconds.
 	defaults.innerClass = ''; // Class to add to $inner element.
 	defaults.flipperClass = 'flipper'; // Base class for flipper element.
@@ -268,9 +269,11 @@ var flipper = (function () {
 			// Cache the new active flipper modal.
 			service.activeFlipperModal = flipper;
 			// Add height/width to main $element to retain its dimensions while $inner is position 'fixed'.
-			flipper.$element.style.width = flipper.$element.offsetWidth + 'px';
-			flipper.$element.style.height = flipper.$element.offsetHeight + 'px';
-			flipper.$element.style.minHeight = flipper.$element.offsetHeight + 'px';
+			if (defaults.addDimensions) {
+				flipper.$element.style.width = flipper.$element.offsetWidth + 'px';
+				flipper.$element.style.height = flipper.$element.offsetHeight + 'px';
+				flipper.$element.style.minHeight = flipper.$element.offsetHeight + 'px';
+			}
 			// Position $inner element 'fixed' at same position as main $element.
 			var flipperBox = flipper.$element.getBoundingClientRect();
 			flipper.$inner.style.position = 'fixed';
@@ -327,9 +330,11 @@ var flipper = (function () {
 				// Append $inner back to $element.
 				flipper.$element.appendChild(flipper.$inner);
 				// Reset styles.
-				flipper.$element.style.width = '';
-				flipper.$element.style.height = '';
-				flipper.$element.style.minHeight = '';
+				if (defaults.addDimensions) {
+					flipper.$element.style.width = '';
+					flipper.$element.style.height = '';
+					flipper.$element.style.minHeight = '';
+				}
 				flipper.$inner.style.position = '';
 				flipper.$inner.style.left = '';
 				flipper.$inner.style.top = '';
