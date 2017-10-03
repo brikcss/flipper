@@ -7,32 +7,38 @@
 ===================================================================== */
 
 
+/**
+ * Add polyfill for Element.closest (https://developer.mozilla.org/en-US/docs/Web/API/Element/closest#Polyfill)
+ */
+(function () {
+	if (!Element.prototype.matches) {
+		Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+	}
+	if (!Element.prototype.closest) {
+		Element.prototype.closest = function(s) {
+			var el = this;
+			var ancestor = this;
+			if (!document.documentElement.contains(el)) {
+				return null;
+			}
+			do {
+				if (ancestor.matches(s)) {
+					return ancestor;
+				}
+				ancestor = ancestor.parentElement;
+			} while (ancestor !== null);
+			return null;
+		};
+	}
+})();
+
+
+/**
+ * Flipper service / plugin.
+ */
 (function() {
 	angular.module('brikcss.flipper.service', [])
 		.factory('flipperService', ['$timeout', function ($timeout) {
-			// Default flipper options.
-			var defaults = {};
-			defaults.type = 'inline'; // 'inline'|'modal'
-			defaults.addDimensions = false; // Add height, width to main element while open.
-			defaults.animationTime = 300; // milliseconds.
-			defaults.innerClass = ''; // Class to add to $inner element.
-			defaults.flipperClass = 'flipper'; // Base class for flipper element.
-			// Provide CSS classes as a setting so they can be overridden.
-			defaults.classes = {
-				main: defaults.flipperClass,
-				inner: defaults.flipperClass + '__container',
-				modals: defaults.flipperClass + '__modals',
-				front: defaults.flipperClass + '__front',
-				back: defaults.flipperClass + '__back',
-				close: defaults.flipperClass + '__close',
-				mods: {
-					modal: defaults.flipperClass + '__container--modal',
-					flipped: defaults.flipperClass + '--flipped',
-					modalsActive: defaults.flipperClass + '__modals--active'
-				},
-			};
-			defaults.openElements = '.' + defaults.classes.front; // Selector to add open click event to.
-			defaults.closeElements = '.' + defaults.classes.close; // Selector to add close click event to.
 			// Service object contains methods and props to be publicly returned.
 			var service = {
 				create: createFlippers,
@@ -41,47 +47,84 @@
 				toggle: toggleFlipper,
 				destroy: destroyFlipper,
 				all: {},
-				setFlipperClass: setFlipperClass
+				init: init,
+				defaults: {
+					type: 'inline', // 'inline'|'modal'
+					addDimensions: false, // Add height, width to main element while open.
+					animationTime: 300, // milliseconds.
+					innerClass: '', // Class to add to $inner element.
+					flipperClass: 'flipper', // Base class for flipper element.
+					openButtons: '.flipper__open', // Selector to add open click event to.
+					closeButtons: '.flipper__close', // Selector to add close click event to.
+				},
+				classes: {}
 			};
 			var nextFlipperId = 0;
-			var $flipperModals = document.querySelector(defaults.classes.modals);
+			var $flipperModals;
 
 			// Init.
-			(function init() {
-				// Create modals element and insert to the DOM.
-				if (!$flipperModals) {
-					$flipperModals = document.createElement('div');
-				}
-				$flipperModals.classList.add(defaults.classes.modals);
-				document.body.appendChild($flipperModals);
-			})();
+			init();
 
 			/**
-			 * Helpful function to set base class in a single call.
-			 * @method  setFlipperClass
-			 * @param   {string}  baseClass  Base class for flipper.
+			 * Initialize flipper service with default settings, so each new flipper inherits these defaults.
+			 * @method  init
+			 * @param   {object}  deafults  Default options to set for each new flipper.
 			 * @return  {object}  flipperService.
 			 */
-			function setFlipperClass(baseClass) {
-				defaults.flipperClass = baseClass || defaults.flipperClass; // Base class for flipper element.
-				// Provide CSS classes as a setting so they can be overridden.
-				defaults.classes = {
+			function init(defaults, classes) {
+				defaults = defaults || {};
+				classes = classes || {};
+				var baseClass = defaults.flipperClass || classes.main || 'flipper';
+
+				// Set classes based on flipperClass.
+				updateBaseClass(baseClass, !defaults.openButtons && !defaults.closeButtons);
+
+				// Merge classes.
+				if (classes) {
+					service.classes = Object.assign(service.classes, defaults.classes);
+				}
+
+				// Merge defaults.
+				if (defaults) {
+					service.defaults = Object.assign(service.defaults, defaults);
+				}
+
+				// If $flipperModals exists, update the class; otherwise create it.
+				if ($flipperModals) {
+					$flipperModals.removeAttribute('class');
+				} else {
+					$flipperModals = document.createElement('div');
+					document.body.appendChild($flipperModals);
+				}
+				$flipperModals.classList.add(service.classes.modals);
+
+				return service;
+			}
+
+			/**
+			 * Helper function which updates the base class used by flipper.
+			 * @method  updateBaseClass
+			 * @param   {string}  baseClass  Base flipper class to use for all other classes.
+			 * @param   {boolean}  updateDefaults  Whether to also update the default settings that rely in certain classes.
+			 */
+			function updateBaseClass(baseClass, updateDefaults) {
+				baseClass = baseClass || 'flipper';
+				service.classes = {
 					main: baseClass,
 					inner: baseClass + '__container',
+					modal: baseClass + '__container--modal',
 					modals: baseClass + '__modals',
+					modalsActive: baseClass + '__modals--active',
 					front: baseClass + '__front',
 					back: baseClass + '__back',
 					close: baseClass + '__close',
-					mods: {
-						modal: baseClass + '__container--modal',
-						flipped: baseClass + '--flipped',
-						modalsActive: baseClass + '__modals--active'
-					},
+					flipped: baseClass + '--flipped',
 				};
-				defaults.openElements = '.' + defaults.classes.front; // Selector to add open click event to.
-				defaults.closeElements = '.' + defaults.classes.close; // Selector to add close click event to.
-
-				return service;
+				if (updateDefaults) {
+					service.defaults.openButtons = '.' + service.classes.front;
+					service.defaults.closeButtons = '.' + service.classes.close;
+				}
+				return service.classes;
 			}
 
 			/**
@@ -124,7 +167,7 @@
 				var flipper;
 				// Allow user to pass a function/callback to dynamically create options.
 				if (typeof options === 'function') {
-					flipper = Object.assign({$element: element}, defaults);
+					flipper = Object.assign({$element: element}, service.defaults);
 					options = options(flipper);
 					// Don't allow undefined or null values.
 					Object.keys(options).forEach(function (key) {
@@ -134,7 +177,7 @@
 					});
 					flipper = Object.assign(flipper, options);
 				} else {
-					flipper = Object.assign({$element: element}, defaults, options);
+					flipper = Object.assign({$element: element}, service.defaults, options);
 				}
 				// Make sure the element exists and is a DOM element.
 				if (!flipper.$element || !(flipper.$element instanceof HTMLElement)) {
@@ -169,31 +212,32 @@
 			 * @return  {object}  Flipper object.
 			 */
 			function buildFlipperDom(flipper) {
-				// Add flipper id to $element.
-				flipper.$element.dataset.flipperId = flipper.id;
 				// Cache important flipper DOM elements.
-				flipper.$front = flipper.$element.querySelector('.' + flipper.classes.front) || flipper.$element.children[0];
-				flipper.$back = flipper.$element.querySelector('.' + flipper.classes.back) || flipper.$element.children[1];
-				flipper.$inner = flipper.$element.querySelector('.' + flipper.classes.inner) || document.createElement('div');
+				flipper.$front = flipper.$element.querySelector('.' + service.classes.front) || flipper.$element.children[0];
+				flipper.$back = flipper.$element.querySelector('.' + service.classes.back) || flipper.$element.children[1];
+				flipper.$inner = flipper.$element.querySelector('.' + service.classes.inner) || document.createElement('div');
 				// Add flipper classes.
-				flipper.$element.classList.add(flipper.classes.main);
-				flipper.$element.classList.add(flipper.classes.main + '--' + flipper.type);
-				flipper.$inner.classList.add(flipper.classes.inner);
-				flipper.$front.classList.add(flipper.classes.front);
-				flipper.$back.classList.add(flipper.classes.back);
+				flipper.$element.classList.add(service.classes.main);
+				flipper.$element.classList.add(service.classes.main + '--' + flipper.type);
+				flipper.$inner.classList.add(service.classes.inner);
+				flipper.$front.classList.add(service.classes.front);
+				flipper.$back.classList.add(service.classes.back);
 				if (flipper.type === 'modal') {
-					flipper.$inner.classList.add(flipper.classes.mods.modal);
+					flipper.$inner.classList.add(service.classes.modal);
 				}
 				if (flipper.innerClass) {
 					flipper.$inner.classList.add(flipper.innerClass);
 				}
 				// Create element's inner dom.
-				if (!flipper.$element.querySelector('.' + flipper.classes.inner)) {
+				if (!flipper.$element.querySelector('.' + service.classes.inner)) {
 					for (var i = 0; i < flipper.$element.children.length;) {
 						flipper.$inner.appendChild(flipper.$element.children[0]);
 					}
 					flipper.$element.appendChild(flipper.$inner);
 				}
+				// Add flipper id to $element.
+				flipper.$element.dataset.flipperId = flipper.id;
+				flipper.$inner.dataset.flipperId = flipper.id;
 				return flipper;
 			}
 
@@ -207,8 +251,18 @@
 				flipper.open = function open() {
 					openFlipper(flipper.id);
 				};
-				flipper.close = function close() {
-					closeFlipper(flipper.id);
+				flipper.openFromChild = function openFromChild() {
+					if (event.target.matches(flipper.openButtons) || event.target.closest(flipper.openButtons)) {
+						flipper.open();
+					}
+				};
+				flipper.close = function close(keepModalsOpen) {
+					closeFlipper(flipper.id, keepModalsOpen);
+				};
+				flipper.closeFromChild = function closeFromChild() {
+					if (event.target.matches(flipper.closeButtons) || event.target.closest(flipper.closeButtons)) {
+						flipper.close();
+					}
 				};
 				flipper.toggle = function toggle() {
 					toggleFlipper(flipper.id);
@@ -217,6 +271,7 @@
 					destroyFlipper(flipper.id);
 				};
 				flipper.stopPropagation = function stopPropagate(event) {
+					event.cancelBubble = true;
 					event.stopPropagation();
 				};
 				return flipper;
@@ -234,18 +289,12 @@
 					flipper.$inner.addEventListener('click', flipper.stopPropagation);
 				}
 				// Add open click event.
-				if (flipper.openElements) {
-					flipper.$openElements = flipper.$element.querySelectorAll(flipper.openElements);
-					flipper.$openElements.forEach(function (element) {
-						element.addEventListener('click', flipper.open);
-					});
+				if (flipper.openButtons) {
+					flipper.$inner.addEventListener('click', flipper.openFromChild);
 				}
 				// Add close click event.
-				if (flipper.closeElements) {
-					flipper.$closeElements = flipper.$element.querySelectorAll(flipper.closeElements);
-					flipper.$element.querySelectorAll(flipper.closeElements).forEach(function(button) {
-								button.addEventListener('click', flipper.close);
-					});
+				if (flipper.closeButtons) {
+					flipper.$inner.addEventListener('click', flipper.closeFromChild);
 				}
 			}
 
@@ -262,20 +311,22 @@
 				}
 				// Update flipper state.
 				flipper.isOpen = true;
+				// Add height/width to main $element to retain its dimensions while $inner is position 'fixed'.
+				if (flipper.addDimensions) {
+					flipper.$element.style.width = flipper.$element.offsetWidth + 'px';
+					flipper.$element.style.height = flipper.$element.offsetHeight + 'px';
+					flipper.$element.style.minHeight = flipper.$element.offsetHeight + 'px';
+				}
+				// Add open attribute to DOM. Helpful for observables.
+				flipper.$inner.setAttribute('data-flipper-open', true);
 				// Logic for modal flipper.
 				if (flipper.type === 'modal') {
 					// Close any active flipper modal so only one can be open at a time.
 					if (service.activeFlipperModal) {
-						service.activeFlipperModal.close();
+						service.activeFlipperModal.close(true);
 					}
 					// Cache the new active flipper modal.
 					service.activeFlipperModal = flipper;
-					// Add height/width to main $element to retain its dimensions while $inner is position 'fixed'.
-					if (defaults.addDimensions) {
-						flipper.$element.style.width = flipper.$element.offsetWidth + 'px';
-						flipper.$element.style.height = flipper.$element.offsetHeight + 'px';
-						flipper.$element.style.minHeight = flipper.$element.offsetHeight + 'px';
-					}
 					// Position $inner element 'fixed' at same position as main $element.
 					var flipperBox = flipper.$element.getBoundingClientRect();
 					flipper.$inner.style.position = 'fixed';
@@ -288,15 +339,15 @@
 					$flipperModals.appendChild(flipper.$inner);
 					// Activate flipper and flipper modals.
 					setTimeout(function() {
-						$flipperModals.classList.add(defaults.classes.mods.modalsActive);
-						flipper.$inner.classList.add(flipper.classes.mods.flipped);
-						flipper.$element.classList.add(flipper.classes.mods.flipped);
+						$flipperModals.classList.add(service.classes.modalsActive);
+						flipper.$inner.classList.add(service.classes.flipped);
+						flipper.$element.classList.add(service.classes.flipped);
 						// Add click event to body to close flipper while it's open.
-						document.addEventListener('click', flipper.close);
+						document.body.addEventListener('click', flipper.close);
 					}, 10); // We need a slight delay after appending $inner to $flipperModals to make sure the animation is properly applied.
 				// Logic for inline flipper.
 				} else if (flipper.type === 'inline') {
-					flipper.$element.classList.add(flipper.classes.mods.flipped);
+					flipper.$element.classList.add(service.classes.flipped);
 				}
 			}
 
@@ -305,7 +356,7 @@
 			 * @method  closeFlipper
 			 * @param   {string}  id  Flipper id.
 			 */
-			function closeFlipper(id) {
+			function closeFlipper(id, keepModalsOpen) {
 				// If `id` doesn't exist and there is an active flipper modal, make `id` be the active flipper modal.
 				if (!id && service.activeFlipperModal && service.activeFlipperModal.type === 'modal') {
 					id = service.activeFlipperModal.id;
@@ -320,19 +371,17 @@
 				// Handle logic for flipper modal.
 				if (flipper.type === 'modal') {
 					// Deactivate flipper.
-					flipper.$inner.classList.remove(flipper.classes.mods.flipped);
-					flipper.$element.classList.remove(flipper.classes.mods.flipped);
+					flipper.$inner.classList.remove(service.classes.flipped);
+					flipper.$element.classList.remove(service.classes.flipped);
 					service.activeFlipperModal = null;
 					// Remove click event to body to close flipper while it's open.
-					document.removeEventListener('click', closeFlipper);
+					document.body.removeEventListener('click', flipper.close);
 					// Wait until animation is complete (plus a 10ms buffer), then reset the state of the flipper.
 					setTimeout(function() {
-						// Deactivate $flipperModals container.
-						$flipperModals.classList.remove(defaults.classes.mods.modalsActive);
 						// Append $inner back to $element.
 						flipper.$element.appendChild(flipper.$inner);
 						// Reset styles.
-						if (defaults.addDimensions) {
+						if (flipper.addDimensions) {
 							flipper.$element.style.width = '';
 							flipper.$element.style.height = '';
 							flipper.$element.style.minHeight = '';
@@ -343,10 +392,24 @@
 						flipper.$inner.style.width = '';
 						flipper.$inner.style.height = '';
 						flipper.$inner.style.minHeight = '';
+						// Remove open attribute.
+						flipper.$inner.removeAttribute('data-flipper-open');
+						// Deactivate $flipperModals container.
+						if (!service.activeFlipperModal || service.activeFlipperModal.type !== 'modal') {
+							$flipperModals.classList.remove(service.classes.modalsActive);
+						}
 					}, flipper.animationTime + 10);
 				// Handle logic for inline flipper.
 				} else if (flipper.type === 'inline') {
-					flipper.$element.classList.remove(flipper.classes.mods.flipped);
+					flipper.$element.classList.remove(service.classes.flipped);
+					// Reset styles.
+					if (flipper.addDimensions) {
+						flipper.$element.style.width = '';
+						flipper.$element.style.height = '';
+						flipper.$element.style.minHeight = '';
+					}
+					// Remove open attribute.
+					flipper.$inner.removeAttribute('data-flipper-open');
 				}
 			}
 
@@ -390,16 +453,12 @@
 					flipper.$inner.removeEventListener('click', flipper.stopPropagation);
 				}
 				// Remove open click event.
-				if (flipper.$openElements) {
-					flipper.$openElements.forEach(function(element) {
-						element.removeEventListener('click', flipper.open);
-					});
+				if (flipper.openButtons) {
+					flipper.$inner.removeEventListener('click', flipper.openFromChild);
 				}
 				// Remove close click event.
-				if (flipper.$closeElements) {
-					flipper.$closeElements.forEach(function(element) {
-						element.removeEventListener('click', flipper.close);
-					});
+				if (flipper.closeButtons) {
+					flipper.$inner.removeEventListener('click', flipper.closeFromChild);
 				}
 				// Remove from service cache.
 				delete service.all[id];
