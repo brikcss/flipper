@@ -4,6 +4,40 @@
  * @description Flipper plugin.
  * @layer components
 ===================================================================== */
+/**
+ * Add polyfill for Object.assign (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill).
+ */
+(function () {
+	if (typeof Object.assign != 'function') {
+		// Must be writable: true, enumerable: false, configurable: true
+		Object.defineProperty(Object, "assign", {
+			value: function assign(target, varArgs) { // .length of function is 2
+				'use strict';
+				if (target == null) { // TypeError if undefined or null
+					throw new TypeError('Cannot convert undefined or null to object');
+				}
+
+				var to = Object(target);
+
+				for (var index = 1; index < arguments.length; index++) {
+					var nextSource = arguments[index];
+
+					if (nextSource != null) { // Skip over if undefined or null
+						for (var nextKey in nextSource) {
+							// Avoid bugs when hasOwnProperty is shadowed
+							if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+								to[nextKey] = nextSource[nextKey];
+							}
+						}
+					}
+				}
+				return to;
+			},
+			writable: true,
+			configurable: true
+		});
+	}
+})();
 
 
 /**
@@ -147,10 +181,10 @@ var flipper = (function () {
 			console.error('No flippers were found.', elements, options); // eslint-disable-line
 			return false;
 		}
-		// Iterate through elements to create a flipper for each.
-		return elements.forEach(function (element) {
+		// Iterate through elements to create a flipper for each. (Edge doesn't like iterating through elements as an array, which is why we iterate through Object.keys).
+		return Object.keys(elements).forEach(function (element, i) {
 			// Merge options with defaults and create the flipper instance.
-			return createFlipper(element, options);
+			return createFlipper(elements[i], options);
 		});
 	}
 
