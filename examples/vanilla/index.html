@@ -198,7 +198,8 @@
 			// The flipper object gives you access to flipper.$element and other default settings.
 			return {
 				id: flipper.$element.dataset.flipperId,
-				type: flipper.$element.dataset.flipperType
+				type: flipper.$element.dataset.flipperType,
+				addDimensions: flipper.$element.dataset.flipperType === 'modal'
 			};
 		});
 
@@ -222,7 +223,7 @@
 		 * Add a flipper reinit button.
 		 */
 		document.querySelector('.flipper__init').addEventListener('click', function () {
-			flipper.create('[data-flipper-id="inlineFlipper"]', {id: 'inlineFlipper'});
+			flipper.create('.flipper[data-flipper-id="inlineFlipper"]', {id: 'inlineFlipper'});
 			document.querySelector('.flipper__init').style.display = 'none';
 			document.querySelector('.flipper__destroy').style.display = 'block';
 		});

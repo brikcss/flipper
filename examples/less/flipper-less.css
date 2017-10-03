@@ -10,7 +10,7 @@
 }
 .flipper__container {
   height: inherit;
-  width: inherit;
+  width: 100%;
   will-change: transform;
   transform-style: preserve-3d;
   transition: transform 0.3s;
@@ -75,7 +75,7 @@
   bottom: 0;
   top: 0;
   right: 0;
-  z-index: 10;
+  z-index: 20;
 }
 /** [[END]] */
 /** [[START]] View layer. */
