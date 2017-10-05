@@ -74,10 +74,11 @@
 
 			<div class="column">
 				<!-- Normal flipper with equal height sides. -->
-				<div class="flipper flipper--equal-height" flipper>
+				<div class="flipper flipper--equal-height" flipper="{openButtons: '.flipper__open'}">
 					<div class="flipper__front">
 						<div class="padded">
-							<h2>Equal Height Flipper</h2>
+							<h2>Equal Height Flipper which opens from child</h2>
+							<p><button class="flipper__open" type="button">Open me</button></p>
 							<p>If you want the front and back sides to have equal height, simply restrict the <code>height</code> of the main <code>.flipper</code> element.</p>
 						</div>
 					</div>

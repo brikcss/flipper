@@ -283,7 +283,7 @@ var flipper = (function () {
 		flipper.open = function open() {
 			openFlipper(flipper.id);
 		};
-		flipper.openFromChild = function openFromChild() {
+		flipper.openFromChild = function openFromChild(event) {
 			if (event.target.matches(flipper.openButtons) || event.target.closest(flipper.openButtons)) {
 				flipper.open();
 			}
@@ -291,7 +291,7 @@ var flipper = (function () {
 		flipper.close = function close(keepModalsOpen) {
 			closeFlipper(flipper.id, keepModalsOpen);
 		};
-		flipper.closeFromChild = function closeFromChild() {
+		flipper.closeFromChild = function closeFromChild(event) {
 			if (event.target.matches(flipper.closeButtons) || event.target.closest(flipper.closeButtons)) {
 				flipper.close();
 			}
