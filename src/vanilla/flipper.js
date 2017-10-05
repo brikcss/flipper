@@ -100,7 +100,7 @@ var flipper = (function () {
 	/**
 	 * Initialize flipper service with default settings, so each new flipper inherits these defaults.
 	 * @method  init
-	 * @param   {object}  deafults  Default options to set for each new flipper.
+	 * @param   {object|function}  deafults  Default options to set for each new flipper. Can be function which returns options object.
 	 * @return  {object}  flipperService.
 	 */
 	function init(defaults, classes) {
@@ -116,8 +116,11 @@ var flipper = (function () {
 			service.classes = Object.assign(service.classes, defaults.classes);
 		}
 
-		// Merge defaults.
-		if (defaults) {
+		// If defaults is a function, cache it to apply to each flipper instance later.
+		if (typeof defaults === 'function') {
+			service.defaultsFn = defaults;
+		// Otherwise merge defaults immediately.
+		} else {
 			service.defaults = Object.assign(service.defaults, defaults);
 		}
 
@@ -192,14 +195,17 @@ var flipper = (function () {
 	 * Create a flipper instance and cache it.
 	 * @method  createFlipper
 	 * @param   {HTMLElement}  element  Flipper options object.
-	 * @param   {object}  options  Flipper options object.
+	 * @param   {object|function}  options  Flipper options object, which can be a function which returns the options object.
 	 * @return  {object}  Flipper object.
 	 */
 	function createFlipper(element, options) {
-		var flipper;
-		// Allow user to pass a function/callback to dynamically create options.
+		var flipper = Object.assign(
+			{$element: element},
+			service.defaults
+		);
+		var instanceDefaults;
+		// If options is a function, run it.
 		if (typeof options === 'function') {
-			flipper = Object.assign({$element: element}, service.defaults);
 			options = options(flipper);
 			// Don't allow undefined or null values.
 			Object.keys(options).forEach(function (key) {
@@ -207,9 +213,25 @@ var flipper = (function () {
 					delete options[key];
 				}
 			});
+		}
+		// Merge options to flipper.
+		if (options) {
 			flipper = Object.assign(flipper, options);
-		} else {
-			flipper = Object.assign({$element: element}, service.defaults, options);
+		}
+		// If service.defaultsFn is a function, run it and merge to flipper.
+		if (typeof service.defaultsFn === 'function') {
+			instanceDefaults = service.defaultsFn(flipper);
+			// Don't allow undefined or null values.
+			Object.keys(instanceDefaults).forEach(function (key) {
+				if (instanceDefaults[key] === undefined || instanceDefaults[key] === null) {
+					delete instanceDefaults[key];
+				}
+			});
+			if (options) {
+				flipper = Object.assign(flipper, options, instanceDefaults, options);
+			} else {
+				flipper = Object.assign(flipper, instanceDefaults);
+			}
 		}
 		// Make sure the element exists and is a DOM element.
 		if (!flipper.$element || !(flipper.$element instanceof HTMLElement)) {

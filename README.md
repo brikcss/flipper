@@ -9,6 +9,7 @@
 1. [Flipper API](#flipper-api)
 	1. [Flipper options](#flipper-options)
 	1. [Flipper methods and properties](#flipper-methods-and-properties)
+		1. [`flipper.init( options )`](#flipperinit-options-)
 		1. [`flipper.create( element, options )`](#flippercreate-element-options-)
 			1. [`element`](#element)
 			1. [`options`](#options)
@@ -178,12 +179,12 @@ The flipper API is exactly the same for the vanilla JS plugin as it is for the A
 		<tr>
 			<td><code>openElements</code></td>
 			<td><code>string</code></td>
-			<td>(<code><em>'.flipper__front'</em></code>) Binds an open click event <em>to any element(s) inside of the flipper element</em> which match the selector you provide.</td>
+			<td>(<code><em>'.flipper__front'</em></code>) Binds an open click event <em>to all matching element(s) inside the flipper element</em>.</td>
 		</tr>
 		<tr>
 			<td><code>closeElements</code></td>
 			<td><code>string</code></td>
-			<td>(<code><em>'.flipper__close'</em></code>) Binds a close click event <em>to any element(s) inside of the flipper element</em> which match the selector you provide.</td>
+			<td>(<code><em>'.flipper__close'</em></code>) Binds a close click event <em>to all matching element(s) inside the flipper element</em>.</td>
 		</tr>
 		<tr>
 			<td><code>animationTime</code></td>
@@ -212,6 +213,32 @@ The flipper API is exactly the same for the vanilla JS plugin as it is for the A
 ### Flipper methods and properties
 
 Flipper attaches the `open`, `close`, and `toggle` methods both to the flipper plugin itself, as well as to each flipper instance. When calling one of these methods on the actual instance, you do not need to pass the `flipperId`. In the examples below, the word `instance` is used to refer to the flipper instance returned by `flipper.create()`.
+
+<a name="flipperinit-options-"></a>
+#### `flipper.init( options )`
+
+Re-initializes the flipper plugin with custom default settings. This means each new flipper instance will be created with these default settings.
+
+_Note: This methods sets **global default** settings for all flipper instances. These global defaults may still be overridden with the `flipper.create(element, options)` method, which applies settings to each flipper instance._
+
+```js
+// All new flippers will have these as default settings.
+flipper.init({
+	type: 'modal',
+	addDimensions: true
+});
+```
+
+The `options` can also be a function which returns the options object:
+
+```js
+// Apply custom default settings to each new flipper instance.
+flipper.init(function (instance) {
+	return {
+		addDimensions: instance.type === 'modal'
+	};
+});
+```
 
 <a name="flippercreate-element-options-"></a>
 #### `flipper.create( element, options )`

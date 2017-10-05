@@ -4,7 +4,7 @@
 	<title>Flipper Angular Demo</title>
 	<link rel="stylesheet" type="text/css" href="../flipper.css">
 </head>
-<body>
+<body ng-controller="demoCtrl">
 	<div class="container">
 		<div class="intro">
 			<h1>Flipper Angular</h1>
@@ -55,7 +55,7 @@
 				</div>
 
 				<!-- Modal flipper. -->
-				<div class="flipper" flipper="{type: 'modal', addDimensions: true}">
+				<div class="flipper" flipper="{type: 'modal'}">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -92,7 +92,7 @@
 				</div>
 
 				<!-- Modal flipper. -->
-				<div class="flipper" flipper="{type: 'modal', addDimensions: true}">
+				<div class="flipper" flipper="{type: 'modal'}">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -129,7 +129,7 @@
 
 			<div class="column">
 				<!-- Modal flipper. -->
-				<div class="flipper" flipper="{type: 'modal', addDimensions: true}">
+				<div class="flipper" flipper="{type: 'modal'}">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -190,7 +190,15 @@
 	<script type="text/javascript" src="../angular/flipper-directives.js"></script>
 	<script type="text/javascript">
 		(function () {
-			angular.module('demo', ['brikcss.flipper']);
+			angular.module('demo', ['brikcss.flipper'])
+				.controller('demoCtrl', function (flipperService) {
+					// Apply custom default settings to all new flippers in this controller.
+					flipperService.init(function (instance) {
+						return {
+							addDimensions: instance.type === 'modal'
+						};
+					});
+				});
 		})();
 	</script>
 </body>
