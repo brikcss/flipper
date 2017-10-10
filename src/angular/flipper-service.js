@@ -186,11 +186,19 @@
 					console.error('No flippers were found.', elements, options); // eslint-disable-line
 					return false;
 				}
-				// Iterate through elements to create a flipper for each. (Edge doesn't like iterating through elements as an array, which is why we iterate through Object.keys).
-				return Object.keys(elements).forEach(function (element, i) {
-					// Merge options with defaults and create the flipper instance.
-					return createFlipper(elements[i], options);
-				});
+				// If there is only one flipper, create it and return the flipper.
+				if (elements.length === 1) {
+					return createFlipper(elements[0], options);
+				}
+				// Otherwise, iterate through all, create a flipper for each, and return an array of flippers. (Edge doesn't like iterating through elements as an array, which is why we iterate through Object.keys).
+				else {
+					var flippers = [];
+					Object.keys(elements).forEach(function (element, i) {
+						// Merge options with defaults and create the flipper instance.
+						flippers.push(createFlipper(elements[i], options));
+					});
+					return flippers;
+				}
 			}
 
 			/**

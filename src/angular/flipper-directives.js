@@ -32,7 +32,12 @@
 				}
 
 				// Instantiate this flipper instance.
-				flipperService.create($element[0], $scope.flipper);
+				var flipper = flipperService.create($element[0], $scope.flipper);
+
+				// Destroy flipper when the scope is destroyed.
+				$scope.$on('$destroy', function () {
+					flipper.destroy();
+				});
 			}
 		};
 	}
