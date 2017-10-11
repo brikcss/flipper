@@ -17,22 +17,23 @@
   transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
 }
 .flipper--flipped .flipper__container {
-  transform: rotateY(-180deg);
+  transform: rotateY(-180deg) translate(0, 0);
 }
 .flipper__container--modal {
   display: flex;
   pointer-events: initial;
   will-change: left, top, height, width, transform, box-shadow;
-  transform: rotateY(0deg);
+  transform: rotateY(0deg) translate(0, 0);
   transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s, transform 0.3s, box-shadow 0.3s;
   transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
 }
 .flipper__container--modal.flipper--flipped {
-  left: calc(50% -  200px) !important;
-  top: calc(50% -  200px) !important;
+  left: 50% !important;
+  top: 50% !important;
   height: 400px !important;
   width: 400px !important;
-  transform: rotateY(-180deg);
+  max-width: 100% !important;
+  transform: rotateY(-180deg) translate(0, 0);
 }
 .flipper__container--modal.flipper--flipped .flipper__back {
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);
@@ -59,7 +60,7 @@
 .flipper__back {
   background-color: #aaa;
   max-height: 0 !important;
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translate(50%, -50%);
 }
 .flipper--flipped .flipper__back {
   max-height: 100vh !important;

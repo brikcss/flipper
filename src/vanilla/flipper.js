@@ -86,7 +86,7 @@ var flipper = (function () {
 			animationTime: 300, // milliseconds.
 			innerClass: '', // Class to add to $inner element.
 			flipperClass: 'flipper', // Base class for flipper element.
-			openButtons: '.flipper__open', // Selector to add open click event to.
+			openButtons: '.flipper__front', // Selector to add open click event to.
 			closeButtons: '.flipper__close', // Selector to add close click event to.
 		},
 		classes: {}
@@ -131,6 +131,11 @@ var flipper = (function () {
 			$flipperModals = document.createElement('div');
 			document.body.appendChild($flipperModals);
 		}
+		// Prevent propagation from flipper modal to document body.
+		$flipperModals.addEventListener('click', function stopPropagate(event) {
+			event.cancelBubble = true;
+			event.stopPropagation();
+		});
 		$flipperModals.classList.add(service.classes.modals);
 
 		return service;
@@ -346,10 +351,6 @@ var flipper = (function () {
 	 * @return  {object}  Flipper object.
 	 */
 	function addFlipperEvents(flipper) {
-		// Prevent propagation from flipper modal to document body.
-		if (flipper.type === 'modal') {
-			flipper.$inner.addEventListener('click', flipper.stopPropagation);
-		}
 		// Add open click event.
 		if (flipper.openButtons) {
 			flipper.$inner.addEventListener('click', flipper.openFromChild);
@@ -509,10 +510,6 @@ var flipper = (function () {
 		// Close flipper if it is active.
 		if (flipper.id === service.activeFlipperModal) {
 			flipper.close();
-		}
-		// Remove propagation listener from flipper modal to document body.
-		if (flipper.type === 'modal') {
-			flipper.$inner.removeEventListener('click', flipper.stopPropagation);
 		}
 		// Remove open click event.
 		if (flipper.openButtons) {
