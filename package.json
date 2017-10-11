@@ -1,6 +1,6 @@
 {
 	"name": "@brikcss/flipper",
-	"version": "0.4.3",
+	"version": "0.4.4",
 	"description": "Flipper is a front end web module that flips things. In style. Flipper can flip an element in place or open it up to a modal dialog.",
 	"keywords": [
 		"flipper",
