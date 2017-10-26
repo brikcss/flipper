@@ -54,9 +54,9 @@ npm install @brikcss/flipper
 	<script src="src/angular/flipper-directives.js"></script>
 	```
 
-2. Pick your CSS flavor (SASS, LESS, or vanilla) and include the styles:
+2. Pick your CSS flavor (SASS, or vanilla) and include the styles:
 
-	_Note: The SASS/LESS flavors give you the added flexibility of being able to customize flipper classes and other settings, which you do not get with the vanilla CSS flavor, which uses all default classes and settings._
+	_Note: The SASS flavor gives you the added flexibility of being able to customize flipper classes and other settings, which you do not get with the vanilla CSS flavor, which uses all default classes and settings._
 
 	For SASS:
 
@@ -75,25 +75,6 @@ npm install @brikcss/flipper
 			height: 400px // height of flipper modal.
 		),
 		$bg: (front: #ccc, back: #aaa) // background-colors used in flipper.
-	);
-	```
-
-	For LESS:
-
-	```less
-	// main.less
-	@import 'src/less/flipper.less';
-
-	// Include the flipper mixin wherever you want your flipper classes.
-	.mix-flipper(/* Mixin settings go here */);
-		// These are the default flipper mixin settings.
-		@base: flipper, // This will be the base flipper class.
-		@flipFromRight: true, // Whether it will flip from right or left.
-		@duration: 0.3s, // Duration of transition.
-		@modalHeight: 400px, // height of flipper modal.
-		@modalWidth: 400px, // width of flipper modal.
-		@bgFront: #ccc, // default background-color of flipper front side.
-		@bgBack: #aaa) // default background-color of flipper back side.
 	);
 	```
 

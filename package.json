@@ -18,10 +18,8 @@
 	"main": "src/vanilla/flipper.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "npm run compile:less && npm run watch:less & npm run watch:sass & browser-sync start --config .browsersync.js",
+		"dev": "npm run watch:sass & browser-sync start --config .browsersync.js",
 		"build": "$(echo \"@import 'src/sass/flipper'; @include flipper();\" > temp.scss) && node-sass ./temp.scss --output-style=expanded --indent-type=tab --indent-width=1 src/css/flipper.css && rm temp.scss",
-		"compile:less": "lessc examples/less/*.less examples/less/flipper-less.css",
-		"watch:less": "chokidar 'src/less/*.less' 'examples/less/*.less' -c 'npm run compile:less && browser-sync reload'",
 		"watch:sass": "node-sass examples/main.scss examples/flipper.css --output-style=expanded --indent-type=tab indent-width=1 && node-sass -w examples/main.scss examples/flipper.css"
 	},
 	"repository": {
@@ -38,7 +36,6 @@
 		"autoprefixer": "^7.1.4",
 		"browser-sync": "^2.18.13",
 		"chokidar-cli": "^1.2.0",
-		"less": "^2.7.2",
 		"node-sass": "^4.5.3",
 		"postcss": "^6.0.12",
 		"postcss-scss": "^1.0.2"
