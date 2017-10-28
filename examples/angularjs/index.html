@@ -2,13 +2,13 @@
 <html ng-app="demo">
 <head>
 	<title>Flipper Angular Demo</title>
-	<link rel="stylesheet" type="text/css" href="../flipper.css">
+	<link rel="stylesheet" type="text/css" href="../flipper-sass.css">
 </head>
 <body ng-controller="demoCtrl">
 	<div class="container">
 		<div class="intro">
-			<h1>Flipper Angular</h1>
-			<div>This demo shows flippers in columns to see how flippers interact with elements above and below it.</div>
+			<h1>Flipper with AngularJS &amp; SASS</h1>
+			<div>This is an example of the AngularJS and SASS flavors of flipper.</div>
 		</div>
 
 		<div class="columns">
@@ -185,11 +185,10 @@
 	</div>
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
-	<script type="text/javascript" src="../angular/flipper-module.js"></script>
-	<script type="text/javascript" src="../angular/flipper-service.js"></script>
-	<script type="text/javascript" src="../angular/flipper-directives.js"></script>
+	<script type="text/javascript" src="../../dist/js/angularjs/flipper-angularjs.js"></script>
 	<script type="text/javascript">
 		(function () {
+			/* globals angular */
 			angular.module('demo', ['brikcss.flipper'])
 				.controller('demoCtrl', function (flipperService) {
 					// Apply custom default settings to all new flippers in this controller.

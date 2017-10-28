@@ -1,0 +1,142 @@
+/** ====================================================================
+ * main.scss
+ * ---------
+ * @description Test example for using flipper.
+===================================================================== */
+/** [[START]] Core layer. */
+.flipper {
+	perspective: 1000px;
+	position: relative;
+}
+
+.flipper__container {
+	height: inherit;
+	width: 100%;
+	will-change: transform;
+	transform-style: preserve-3d;
+	transition: transform 0.3s;
+	transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
+}
+
+.flipper--flipped .flipper__container {
+	transform: rotateY(-180deg);
+}
+
+.flipper__container--modal {
+	display: flex;
+	pointer-events: initial;
+	will-change: left, top, height, width, transform, box-shadow;
+	transform: rotateY(0deg) translate(0, 0);
+	transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s, transform 0.3s, box-shadow 0.3s;
+	transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
+}
+
+.flipper__container--modal.flipper--flipped {
+	left: 50% !important;
+	top: 50% !important;
+	height: 400px !important;
+	width: 400px !important;
+	max-width: 100% !important;
+	transform: rotateY(-180deg) translate(50%, -50%);
+}
+
+.flipper__container--modal.flipper--flipped .flipper__back {
+	box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);
+}
+
+.flipper__front, .flipper__back {
+	float: left;
+	height: inherit;
+	width: inherit;
+	overflow-y: auto;
+	position: relative;
+	will-change: max-height;
+	transition: max-height 0s 0.12s;
+	transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
+}
+
+.flipper__front {
+	background-color: #ccc;
+	margin-right: -100%;
+	max-height: 100vh;
+}
+
+.flipper--flipped .flipper__front {
+	max-height: 0;
+}
+
+.flipper__back {
+	background-color: #aaa;
+	max-height: 0 !important;
+	transform: rotateY(180deg);
+}
+
+.flipper--flipped .flipper__back {
+	max-height: 100vh !important;
+}
+
+.flipper__modals {
+	pointer-events: none;
+	will-change: auto;
+}
+
+.flipper__modals--active {
+	perspective: 1000px;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	top: 0;
+	right: 0;
+	z-index: 20;
+}
+
+/** [[END]] */
+/** [[START]] View layer. */
+* {
+	box-sizing: border-box;
+}
+
+.container {
+	height: 100vh;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.intro {
+	width: 800px;
+	margin: 20px auto;
+}
+
+.columns {
+	display: flex;
+	justify-content: center;
+}
+
+.column {
+	display: flex;
+	flex-direction: column;
+	margin-left: 20px;
+	margin-right: 20px;
+	width: 240px;
+}
+
+.flipper {
+	width: 240px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.flipper--equal-height {
+	height: 240px;
+}
+
+.flipper__modal {
+	height: inherit;
+	width: inherit;
+}
+
+.padded {
+	padding: 20px;
+}
+
+/** [[END]] */

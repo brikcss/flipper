@@ -7,6 +7,7 @@
 
 
 (function () {
+	/* globals angular */
 	angular.module('brikcss.flipper.directives', [])
 		.directive('flipper', ['flipperService', flipperDirective])
 		.directive('openFlipper', ['flipperService', openFlipperDirective])

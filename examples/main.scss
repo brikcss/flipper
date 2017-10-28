@@ -6,9 +6,7 @@
 
 
 /** [[START]] Core layer. */
-@import '../src/sass/flipper';
-// Flipper alone does not produce any CSS... it must be included with @include.
-@include flipper();
+@import '../src/sass/flipper-init';
 /** [[END]] */
 
 /** [[START]] View layer. */
