@@ -1,0 +1,205 @@
+/*!
+ * @brikcss/flipper v0.4.4
+ * @filename flipper-sass.css
+ * @author The Zimmee <thezimmee@gmail.com>
+ * @homepage https://github.com/brikcss/flipper
+ * @license MIT
+ * @description Flipper is a front end web module that flips things. In style. Flipper can flip an element in place or open it up to a modal dialog.
+ */
+
+
+/** ====================================================================
+ * main.scss
+ * ---------
+ * @description Test example for using flipper.
+===================================================================== */
+/** [[START]] Core layer. */
+/* line 11, src/sass/flipper.scss */
+.flipper {
+	-webkit-perspective: 1000px;
+	perspective: 1000px;
+	position: relative;
+}
+
+/* line 15, src/sass/flipper.scss */
+.flipper__container {
+	height: inherit;
+	width: 100%;
+	will-change: transform;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	-webkit-transition: -webkit-transform 0.3s;
+	transition: -webkit-transform 0.3s;
+	transition: transform 0.3s;
+	transition: transform 0.3s, -webkit-transform 0.3s;
+	-webkit-transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
+	transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
+}
+
+/* line 23, src/sass/flipper.scss */
+.flipper--flipped .flipper__container {
+	-webkit-transform: rotateY(-180deg);
+	transform: rotateY(-180deg);
+}
+
+/* line 27, src/sass/flipper.scss */
+.flipper__container--modal {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	pointer-events: initial;
+	will-change: left, top, height, width, transform, box-shadow;
+	-webkit-transform: rotateY(0deg) translate(0, 0);
+	transform: rotateY(0deg) translate(0, 0);
+	-webkit-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s, -webkit-transform 0.3s, -webkit-box-shadow 0.3s;
+	transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s, -webkit-transform 0.3s, -webkit-box-shadow 0.3s;
+	transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s, transform 0.3s, box-shadow 0.3s;
+	transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s, transform 0.3s, box-shadow 0.3s, -webkit-transform 0.3s, -webkit-box-shadow 0.3s;
+	-webkit-transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
+	transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
+}
+
+/* line 35, src/sass/flipper.scss */
+.flipper__container--modal.flipper--flipped {
+	left: 50% !important;
+	top: 50% !important;
+	height: 400px !important;
+	width: 400px !important;
+	max-width: 100% !important;
+	-webkit-transform: rotateY(-180deg) translate(50%, -50%);
+	transform: rotateY(-180deg) translate(50%, -50%);
+}
+
+/* line 43, src/sass/flipper.scss */
+.flipper__container--modal.flipper--flipped .flipper__back {
+	-webkit-box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);
+}
+
+/* line 50, src/sass/flipper.scss */
+.flipper__front, .flipper__back {
+	float: left;
+	height: inherit;
+	width: inherit;
+	overflow-y: auto;
+	position: relative;
+	will-change: max-height;
+	-webkit-transition: max-height 0s 0.12s;
+	transition: max-height 0s 0.12s;
+	-webkit-transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
+	transition-timing-function: cubic-bezier(0.6, 0, 0.2, 1.3);
+}
+
+/* line 62, src/sass/flipper.scss */
+.flipper__front {
+	background-color: #ccc;
+	margin-right: -100%;
+	max-height: 100vh;
+}
+
+/* line 67, src/sass/flipper.scss */
+.flipper--flipped .flipper__front {
+	max-height: 0;
+}
+
+/* line 71, src/sass/flipper.scss */
+.flipper__back {
+	background-color: #aaa;
+	max-height: 0 !important;
+	-webkit-transform: rotateY(180deg);
+	transform: rotateY(180deg);
+}
+
+/* line 76, src/sass/flipper.scss */
+.flipper--flipped .flipper__back {
+	max-height: 100vh !important;
+}
+
+/* line 81, src/sass/flipper.scss */
+.flipper__modals {
+	pointer-events: none;
+	will-change: auto;
+}
+
+/* line 85, src/sass/flipper.scss */
+.flipper__modals--active {
+	-webkit-perspective: 1000px;
+	perspective: 1000px;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	top: 0;
+	right: 0;
+	z-index: 20;
+}
+
+/** [[END]] */
+/** [[START]] View layer. */
+/* line 13, examples/example.scss */
+* {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/* line 16, examples/example.scss */
+.container {
+	height: 100vh;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* line 21, examples/example.scss */
+.intro {
+	width: 800px;
+	margin: 20px auto;
+}
+
+/* line 25, examples/example.scss */
+.columns {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+}
+
+/* line 29, examples/example.scss */
+.column {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	margin-left: 20px;
+	margin-right: 20px;
+	width: 240px;
+}
+
+/* line 36, examples/example.scss */
+.flipper {
+	width: 240px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+/* line 41, examples/example.scss */
+.flipper--equal-height {
+	height: 240px;
+}
+
+/* line 45, examples/example.scss */
+.flipper__modal {
+	height: inherit;
+	width: inherit;
+}
+
+/* line 50, examples/example.scss */
+.padded {
+	padding: 20px;
+}
+
+/** [[END]] */
+/*# sourceMappingURL=flipper-sass.css.map */

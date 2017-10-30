@@ -6,6 +6,10 @@
 
 1. [Install](#install)
 1. [Usage](#usage)
+	1. [Quick start](#quick-start)
+	1. [How to include flipper dependencies](#how-to-include-flipper-dependencies)
+	1. [How to set up and configure flipper](#how-to-set-up-and-configure-flipper)
+	1. [How to create a flipper instance](#how-to-create-a-flipper-instance)
 1. [Flipper API](#flipper-api)
 	1. [Flipper options](#flipper-options)
 	1. [Flipper methods and properties](#flipper-methods-and-properties)
@@ -17,11 +21,11 @@
 		1. [`flipper.close( flipperId )` and `instance.close()`](#flipperclose-flipperid--and-instanceclose)
 		1. [`flipper.toggle( flipperId )` and `instance.toggle()`](#flippertoggle-flipperid--and-instancetoggle)
 		1. [`flipper.all`](#flipperall)
-1. [Angular Flipper](#angular-flipper)
-	1. [`flipper` directive](#flipper-directive)
-	1. [`open-flipper` directive](#open-flipper-directive)
-	1. [`close-flipper` directive](#close-flipper-directive)
-	1. [`toggle-flipper` directive](#toggle-flipper-directive)
+	1. [AngularJS flipper directives](#angularjs-flipper-directives)
+		1. [`flipper` directive](#flipper-directive)
+		1. [`open-flipper` directive](#open-flipper-directive)
+		1. [`close-flipper` directive](#close-flipper-directive)
+		1. [`toggle-flipper` directive](#toggle-flipper-directive)
 1. [Questions, comments, concerns](#questions-comments-concerns)
 
 <!-- /MarkdownTOC -->
@@ -36,118 +40,184 @@ npm install @brikcss/flipper
 <a name="usage"></a>
 ## Usage
 
-1. Pick your JS flavor (vanilla or AngularJS) and include the scripts:
+<a name="quick-start"></a>
+### Quick start
 
-	For vanilla JS:
+1. Pick your JS and CSS flavors and include their dependencies.
+2. Configure flipper.
+3. Create flipper instances.
 
-	```html
-	<!-- index.html -->
-	<script src="src/vanilla/flipper.js"></script>
-	```
+_Note: Flipper JS follows the [Universal Module Definition pattern (UMD)](https://github.com/umdjs/umd), which gives you flexibility to load it as an ES2015 module or as a global variable. See [how to include flipper](#how-to-include-flipper-dependencies) for details._
 
-	For angular:
+<a name="how-to-include-flipper-dependencies"></a>
+### How to include flipper dependencies
 
-	```html
-	<!-- index.html -->
-	<script src="src/angular/flipper-module.js"></script>
-	<script src="src/angular/flipper-service.js"></script>
-	<script src="src/angular/flipper-directives.js"></script>
-	```
+You must include dependencies for both JS and CSS flavors of your choice.
 
-2. Pick your CSS flavor (SASS, LESS, or vanilla) and include the styles:
+**CSS flavors:**
 
-	_Note: The SASS/LESS flavors give you the added flexibility of being able to customize flipper classes and other settings, which you do not get with the vanilla CSS flavor, which uses all default classes and settings._
-
-	For SASS:
+- SASS _(recommended)_:
 
 	```sass
-	// main.scss
-	@import 'src/sass/flipper.scss';
+	/* main.scss */
+	@import 'src/sass/flipper';
 
-	// @include the flipper mixin wherever you want your flipper classes.
-	@include flipper(/* Mixin settings go here */);
-		// These are the default flipper mixin settings.
-		$base: flipper, // This will be the base flipper class.
-		$flipFromRight: true, // Whether it will flip from right or left.
-		$duration: 0.3s, // Duration of transition.
-		$modal: (
-			width: 400px, // width of flipper modal.
-			height: 400px // height of flipper modal.
-		),
-		$bg: (front: #ccc, back: #aaa) // background-colors used in flipper.
-	);
+	/**
+	 * NOTE: Flipper is created in SASS as a mixin, which allows you to
+	 * configure the class names when you `@include` the flipper mixin.
+	 * This gives you a high level of flexibility with how you use flipper.
+	 */
 	```
 
-	For LESS:
-
-	```less
-	// main.less
-	@import 'src/less/flipper.less';
-
-	// Include the flipper mixin wherever you want your flipper classes.
-	.mix-flipper(/* Mixin settings go here */);
-		// These are the default flipper mixin settings.
-		@base: flipper, // This will be the base flipper class.
-		@flipFromRight: true, // Whether it will flip from right or left.
-		@duration: 0.3s, // Duration of transition.
-		@modalHeight: 400px, // height of flipper modal.
-		@modalWidth: 400px, // width of flipper modal.
-		@bgFront: #ccc, // default background-color of flipper front side.
-		@bgBack: #aaa) // default background-color of flipper back side.
-	);
-	```
-
-	For vanilla CSS:
+- Vanilla CSS:
 
 	```html
-	<link rel="stylesheet" type="text/css" href="flipper.css">
+	<!-- index.html -->
+	<link rel="stylesheet" type="text/css" href="dist/css/flipper-vanilla.min.css">
 	```
 
-3. Create a flipper instance:
+**JS flavors:**
 
-	_Each flipper element must have at least two immediate child elements._ Flipper will always use the first immediate child as the flipper's front side and the second immediate child as the back side.
-
-	For vanilla JS:
-
-	```html
-	<!-- HTML: -->
-	<div class="my-flipper">
-		<!-- Flipper's front side. -->
-		<div>...</div>
-		<!-- Flipper's back side. -->
-		<div>...</div>
-	</div>
-	```
+- ES2015 _(recommended)_:
 
 	```js
-	// JS:
-	flipper.create('.my-flipper', options);
+	// Any js script.
+	import flipper from 'dist/js/vanilla/flipper-vanilla';
 
-	// or:
-	flipper.create(document.querySelectorAll('.my-flipper'), options);
+	/**
+	 * NOTE: To use this JS flavor you will need a compiler
+	 * to convert this to browser supported JS. We use and recommend
+	 * `webpack` and `babel`.
+	 */
 	```
 
-	For AngularJS:
+- Vanilla JS:
 
 	```html
-	<!-- This instantiates flipper with all flipper defaults. -->
-	<div flipper>
-		<!-- Flipper's front side. -->
-		<div>...</div>
-		<!-- Flipper's back side. -->
-		<div>...</div>
-	</div>
-
-	<!-- OR -->
-
-	<!-- You can also pass the options object directly to flipper. -->
-	<div flipper="{...}">...</div>
+	<!-- index.html -->
+	<script src="dist/js/vanilla/flipper-vanilla.min.js"></script>
 	```
+
+- AngularJS:
+
+	```html
+	<!-- index.html -->
+	<script src="dist/js/angularjs/flipper-angularjs.min.js"></script>
+	```
+
+<a name="how-to-set-up-and-configure-flipper"></a>
+### How to set up and configure flipper
+
+- SASS is the only flavor that _requires_ setup...
+- ...unless you change the default `$base` class in SASS; in which case you must also set up your JS flavor to use the same base class.
+- Vanilla CSS has no configuration.
+- All other setup is optional.
+
+**SASS:**
+
+```sass
+/* my-flipper-styles.scss */
+@include flipper(
+	/* Put your mixin settings here. These are the defaults: */
+	$base: flipper, // Base class flipper will use. Make sure to set this up in the JS as well if you change the default.
+	$flipFromRight: true, // Whether it will flip from right or left.
+	$duration: 0.3s, // Duration of transition.
+	$modal: (
+		width: 400px, // width of flipper modal.
+		height: 400px // height of flipper modal.
+	),
+	$bg: (front: #ccc, back: #aaa) // background-colors used in flipper.
+);
+```
+
+**ES2015 or Vanilla JS:**
+
+```js
+// Call `flipper.init` to update its configuration.
+// Configuration can be an object or function that returns an object.
+flipper.init(function (instance) {
+	// Using a function gives you access to the flipper `instance`,
+	// which gives details about the element being created.
+	return {
+		// This sets the flipper `type` for each element
+		// to the value of its data attribute: `flipper-type`.
+		type: instance.$element.dataset.flipperType
+	};
+});
+```
+
+_Note: Calling `flipper.init()` configures defaults for **all future flipper instances**. You can further configure a flipper instance with the `flipper.create()` method._
+
+**AngularJS:**
+
+```js
+// Make sure to inject `brikcss.flipper` into your app.
+angular.module('myApp', ['brikcss.flipper'])
+	// And inject `flipperService` wherever you want to use that.
+	.run(function (flipperService) {
+		// `flipperService.init` lets you configure defaults
+		// for all future flipper instances. You can pass a configuration
+		// object or function that returns an object.
+		flipperService.init({...});
+	});
+```
+
+<a name="how-to-create-a-flipper-instance"></a>
+### How to create a flipper instance
+
+_Important: The only requirement for your HTML structure is that each flipper element must contain exactly two children elements._ The first child will be the flipper's front side and the second child is the back side. There is no other requirement for markup structure.
+
+**ES2015 or Vanilla JS:**
+
+```html
+<!-- HTML: -->
+<div class="my-flipper">
+	<!-- This will be flipper's front side. -->
+	<div>...</div>
+	<!-- This will be flipper's back side. -->
+	<div>...</div>
+</div>
+```
+
+```js
+// JS:
+flipper.create('.my-flipper', options);
+
+// or:
+flipper.create(document.querySelectorAll('.my-flipper'), options);
+
+/**
+ * Note: Any options passed to the `flipper.create` method
+ * will be merged with any default configuration.
+ */
+```
+
+**AngularJS:**
+
+_Note: The AngularJS flavor uses the same UMD version of flipper as other JS flavors, only it is wrapped around a thin AngularJS service. This makes the API exactly the same in all JS flavors. The AngularJS flavor also provides directives for added convenience, allowing you to flexibly interact with flipper in HTML templates or in AngularJS controllers and services._
+
+AngularJS templates:
+
+```html
+<!-- This instantiates flipper with all flipper defaults. -->
+<div flipper>
+	<!-- Flipper's front side. -->
+	<div>...</div>
+	<!-- Flipper's back side. -->
+	<div>...</div>
+</div>
+
+<!-- OR -->
+
+<!-- You can also pass the options object directly to flipper
+(see flipper's API below for details about options). -->
+<div flipper="{...}">...</div>
+```
 
 <a name="flipper-api"></a>
 ## Flipper API
 
-The flipper API is exactly the same for the vanilla JS plugin as it is for the Angular flipper service. The only difference is how flipper is referenced. In vanilla, flipper is referenced by the global `flipper` variable, whereas in Angular it is referenced by `flipperService`. But the API is the same.
+The flipper API is exactly the same for the vanilla JS plugin as it is for the AngularJS flipper service. The only difference is how flipper is referenced. In vanilla, flipper is referenced by the global `flipper` variable, whereas in AngularJS it is referenced by `flipperService`. But the API is the same.
 
 <a name="flipper-options"></a>
 ### Flipper options
@@ -292,15 +362,15 @@ Toggles the corresponding flipper.
 
 A map of all flipper instances, organized by their `flipperId`.
 
-<a name="angular-flipper"></a>
-## Angular Flipper
+<a name="angularjs-flipper-directives"></a>
+### AngularJS flipper directives
 
-Angular flipper provides some directives which should typically be all you need to interact with flipper. The directives are documented below. However, you may also interact with flipper more programmatically by using `flipperService` directly.
+The directives that the AngularJS flavor provides should typically be all you need to interact with flipper. However, you may also interact with flipper more programmatically by using `flipperService` directly.
 
-_For documentation on the Angular `flipperService`, refer to the [vanilla flipper API](#flipper-api), which is exactly the same as the Angular `flipperService`. The only difference is that the angular service is called `flipperService` instead of `flipper`._
+_For documentation on the AngularJS `flipperService`, refer to the [vanilla flipper API](#flipper-api), which is exactly the same as the AngularJS `flipperService`. The only difference is that the angularJS service is called `flipperService` instead of `flipper`._
 
 <a name="flipper-directive"></a>
-### `flipper` directive
+#### `flipper` directive
 
 The `flipper` directive automatically creates an instance of flipper for you, allowing you to optionally pass flipper options via the `[flipper]` attribute. This may typically be the only directive you need.
 
@@ -312,10 +382,10 @@ The `flipper` directive automatically creates an instance of flipper for you, al
 <div flipper="{...}"></div>
 ```
 
-[See available options above](#flipper-options).
+[See available options](#flipper-options).
 
 <a name="open-flipper-directive"></a>
-### `open-flipper` directive
+#### `open-flipper` directive
 
 Use the `openElements` option to bind an open click event to any elements _inside_ of a flipper element. Use the `open-flipper` directive when you need to bind an open click event to any elements _outside_ of a flipper element.
 
@@ -326,7 +396,7 @@ Use the `openElements` option to bind an open click event to any elements _insid
 ```
 
 <a name="close-flipper-directive"></a>
-### `close-flipper` directive
+#### `close-flipper` directive
 
 Use the `closeElements` option to bind a close click event to any elements _inside_ of a flipper element. Use the `close-flipper` directive when you need to bind a close click event to any elements _outside_ of a flipper element.
 
@@ -337,7 +407,7 @@ Use the `closeElements` option to bind a close click event to any elements _insi
 ```
 
 <a name="toggle-flipper-directive"></a>
-### `toggle-flipper` directive
+#### `toggle-flipper` directive
 
 Use the `toggle-flipper` directive to bind a toggle click event to any DOM elements.
 

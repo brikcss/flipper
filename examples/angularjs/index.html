@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="demo">
 <head>
-	<title>Flipper Demo</title>
-	<link rel="stylesheet" type="text/css" href="flipper-less.css">
+	<title>Flipper Angular Demo</title>
+	<link rel="stylesheet" type="text/css" href="../flipper-sass.css">
 </head>
-<body>
+<body ng-controller="demoCtrl">
 	<div class="container">
 		<div class="intro">
-			<h1>Vanilla JS Flipper</h1>
-			<div>This demo shows flippers in columns to see how flippers interact with elements above and below it.</div>
+			<h1>Flipper with AngularJS &amp; SASS</h1>
+			<div>This is an example of the AngularJS and SASS flavors of flipper.</div>
 		</div>
 
 		<div class="columns">
 			<div class="column">
 				<div>
-					<button class="flipper__toggle" type="button">Click me to toggle the first flipper.</button>
-					<button class="flipper__destroy" type="button">Click me to destroy the first flipper.</button>
-					<button class="flipper__init" type="button" style="display: none;">Click me to re-init the first flipper.</button>
+					<p>
+						<button toggle-flipper="inlineFlipper" type="button">Click me to toggle the first flipper.</button>
+						<button open-flipper="inlineFlipper" type="button">Click me to open the first flipper.</button>
+						<button close-flipper="inlineFlipper" type="button">Click me to close the first flipper.</button>
+					</p>
 				</div>
 				<!-- Normal flipper. -->
-				<div class="flipper" data-flipper-id="inlineFlipper">
+				<div class="flipper" flipper="{id: 'inlineFlipper'}">
 					<div>
 						<div class="padded">
 							<h2>Inline flipper (default)</h2>
@@ -35,7 +37,7 @@
 				</div>
 
 				<!-- Normal flipper with equal height sides. -->
-				<div class="flipper flipper--equal-height" data-flipper-id="unequalHeightFlipper">
+				<div class="flipper flipper--equal-height" flipper>
 					<div class="flipper__front">
 						<div class="padded">
 							<h2>Equal Height Flipper</h2>
@@ -53,7 +55,7 @@
 				</div>
 
 				<!-- Modal flipper. -->
-				<div class="flipper" data-flipper-id="flipperModal" data-flipper-type="modal">
+				<div class="flipper" flipper="{type: 'modal'}">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -72,10 +74,11 @@
 
 			<div class="column">
 				<!-- Normal flipper with equal height sides. -->
-				<div class="flipper flipper--equal-height" data-flipper-id="unequalHeightFlipper">
+				<div class="flipper flipper--equal-height" flipper="{openButtons: '.flipper__open'}">
 					<div class="flipper__front">
 						<div class="padded">
-							<h2>Equal Height Flipper</h2>
+							<h2>Equal Height Flipper which opens from child</h2>
+							<p><button class="flipper__open" type="button">Open me</button></p>
 							<p>If you want the front and back sides to have equal height, simply restrict the <code>height</code> of the main <code>.flipper</code> element.</p>
 						</div>
 					</div>
@@ -89,7 +92,7 @@
 				</div>
 
 				<!-- Modal flipper. -->
-				<div class="flipper" data-flipper-id="flipperModal" data-flipper-type="modal">
+				<div class="flipper" flipper="{type: 'modal'}">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -106,7 +109,7 @@
 				</div>
 
 				<!-- Normal flipper. -->
-				<div class="flipper" data-flipper-id="inlineFlipper">
+				<div class="flipper" flipper>
 					<div>
 						<div class="padded">
 							<h2>Inline flipper (default)</h2>
@@ -126,7 +129,7 @@
 
 			<div class="column">
 				<!-- Modal flipper. -->
-				<div class="flipper" data-flipper-id="flipperModal" data-flipper-type="modal">
+				<div class="flipper" flipper="{type: 'modal'}">
 					<div>
 						<div class="padded">
 							<h2>Flipper modal</h2>
@@ -143,7 +146,7 @@
 				</div>
 
 				<!-- Normal flipper. -->
-				<div class="flipper" data-flipper-id="inlineFlipper">
+				<div class="flipper" flipper>
 					<div>
 						<div class="padded">
 							<h2>Inline flipper (default)</h2>
@@ -161,7 +164,7 @@
 				</div>
 
 				<!-- Normal flipper with equal height sides. -->
-				<div class="flipper flipper--equal-height" data-flipper-id="unequalHeightFlipper">
+				<div class="flipper flipper--equal-height" flipper>
 					<div class="flipper__front">
 						<div class="padded">
 							<h2>Equal Height Flipper</h2>
@@ -181,51 +184,21 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="../vanilla/flipper.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+	<script type="text/javascript" src="../../dist/js/angularjs/flipper-angularjs.js"></script>
 	<script type="text/javascript">
-		/**
-		 * How to instantiate flipper.
-		 */
-		// 1. Instantiate on a dom element.
-		// flipper.create(document.querySelectorAll('.flipper'));
-		// 2. Instantiate on a selector. The selector will do `querySelectorAll` and instantiate each element.
-		// flipper.create('.flipper');
-
-		/**
-		 * How to dynamically set/pass options.
-		 */
-		flipper.create('.flipper', function (flipper) {
-			// The flipper object gives you access to flipper.$element and other default settings.
-			return {
-				id: flipper.$element.dataset.flipperId,
-				type: flipper.$element.dataset.flipperType
-			};
-		});
-
-		/**
-		 * Add a flipper toggle button.
-		 */
-		document.querySelector('.flipper__toggle').addEventListener('click', function () {
-			flipper.toggle('inlineFlipper');
-		});
-
-		/**
-		 * Add a flipper destroy button.
-		 */
-		document.querySelector('.flipper__destroy').addEventListener('click', function () {
-			flipper.destroy('inlineFlipper');
-			document.querySelector('.flipper__init').style.display = 'block';
-			document.querySelector('.flipper__destroy').style.display = 'none';
-		});
-
-		/**
-		 * Add a flipper reinit button.
-		 */
-		document.querySelector('.flipper__init').addEventListener('click', function () {
-			flipper.create('[data-flipper-id="inlineFlipper"]', {id: 'inlineFlipper'});
-			document.querySelector('.flipper__init').style.display = 'none';
-			document.querySelector('.flipper__destroy').style.display = 'block';
-		});
+		(function () {
+			/* globals angular */
+			angular.module('demo', ['brikcss.flipper'])
+				.controller('demoCtrl', function (flipperService) {
+					// Apply custom default settings to all new flippers in this controller.
+					flipperService.init(function (instance) {
+						return {
+							addDimensions: instance.type === 'modal'
+						};
+					});
+				});
+		})();
 	</script>
 </body>
 </html>

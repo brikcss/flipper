@@ -6,6 +6,7 @@
 ===================================================================== */
 
 
+/* globals angular */
 angular.module('brikcss.flipper', [
 	'brikcss.flipper.service',
 	'brikcss.flipper.directives'

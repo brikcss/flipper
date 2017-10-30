@@ -19,11 +19,10 @@ module.exports = {
 		}
 	},
 	files: [
-		'./examples/vanilla/index.html',
-		'./examples/angular/index.html',
-		'./examples/flipper.css',
-		'./src/vanilla/flipper.js',
-		'./src/angular/*.js'
+		'./dist/css/*.css',
+		'./dist/js/**/*.js',
+		'./examples/*.css',
+		'./examples/**/*.html',
 	],
 	watchTask: true,
 	watchEvents: ['add', 'change', 'unlink'],
@@ -31,8 +30,13 @@ module.exports = {
 		ignoreInitial: true
 	}, // Options passed to chokidar.
 	server: {
-		baseDir: ['examples', 'src'],
-		directory: true
+		baseDir: '.',
+		index: 'examples/vanilla/index.html',
+		// directory: true,
+		// routes: {
+		// 	'/dist': 'dist',
+		// 	'/examples': 'examples'
+		// },
 	},
 	proxy: false,
 	port: 3000,
@@ -47,7 +51,7 @@ module.exports = {
 		}
 	},
 	logLevel: 'info',
-	logPrefix: 'i',
+	// logPrefix: 'i',
 	logConnections: false,
 	logFileChanges: true,
 	logSnippet: true,

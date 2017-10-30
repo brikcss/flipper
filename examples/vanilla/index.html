@@ -2,13 +2,61 @@
 <html>
 <head>
 	<title>Flipper Demo</title>
-	<link rel="stylesheet" type="text/css" href="../flipper.css">
+	<link rel="stylesheet" type="text/css" href="../../dist/css/flipper-vanilla.css">
+	<style type="text/css">
+		* {
+			box-sizing: border-box;
+		}
+
+		.container {
+			height: 100vh;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.intro {
+			width: 800px;
+			margin: 20px auto;
+		}
+
+		.columns {
+			display: flex;
+			justify-content: center;
+		}
+
+		.column {
+			display: flex;
+			flex-direction: column;
+			margin-left: 20px;
+			margin-right: 20px;
+			width: 240px;
+		}
+
+		.flipper {
+			width: 240px;
+			margin-bottom: 20px;
+			margin-top: 20px;
+		}
+
+		.flipper--equal-height {
+			height: 240px;
+		}
+
+		.flipper__modal {
+			height: inherit;
+			width: inherit;
+		}
+
+		.padded {
+			padding: 20px;
+		}
+	</style>
 </head>
 <body>
 	<div class="container">
 		<div class="intro">
-			<h1>Vanilla JS Flipper</h1>
-			<div>This demo shows flippers in columns to see how flippers interact with elements above and below it.</div>
+			<h1>Vanilla Flipper</h1>
+			<div>This is an example of vanilla JS and CSS flavors of flipper.</div>
 		</div>
 
 		<div class="columns">
@@ -181,8 +229,9 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="../vanilla/flipper.js"></script>
+	<script type="text/javascript" src="../../dist/js/vanilla/flipper-vanilla.js"></script>
 	<script type="text/javascript">
+		/* globals flipper */
 		/**
 		 * How to instantiate flipper.
 		 */
