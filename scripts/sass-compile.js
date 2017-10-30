@@ -113,10 +113,19 @@ function compileBundle(bundle) {
 				map: {inline: false}
 			})
 			.then((result) => {
+				const pkg = require('../package.json');
 				let promises = [];
+				let banner = [
+					pkg.name + ' v' + pkg.version,
+					'@filename ' + path.basename(bundle.output),
+					'@author ' + pkg.author,
+					'@homepage ' + pkg.homepage,
+					'@license ' + pkg.license,
+					'@description ' + pkg.description,
+				];
 
 				// Save unminified file.
-				promises.push(fs.outputFile(bundle.output, result.css));
+				promises.push(fs.outputFile(bundle.output, ['/*!\n * ' + banner.join('\n * ') + '\n */', result.css].join('\n\n\n')));
 
 				// Save source map.
 				if (result.map) {
@@ -125,7 +134,8 @@ function compileBundle(bundle) {
 
 				// Minify it in production.
 				if (args.env === 'prod' && bundle.envs.indexOf('prod') > -1) {
-					promises.push( fs.outputFile(path.fileNameWithPostfix(bundle.output, '.min'), require('csso').minify(result.css).css) );
+					let minifiedCss = require('csso').minify(result.css).css;
+					promises.push( fs.outputFile(path.fileNameWithPostfix(bundle.output, '.min'), '/*! ' + banner.join(' | ') + ' */\n' + minifiedCss ));
 				}
 
 				// Log time.

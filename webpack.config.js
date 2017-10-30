@@ -10,9 +10,10 @@
  * Set up dependencies.
  */
 const webpack = require('webpack');
-const path = require('path');
+const path = require('path-extra');
 const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 const libraryName = 'flipper';
+
 
 /**
  * Set up configuration export.
@@ -23,6 +24,7 @@ const libraryName = 'flipper';
 module.exports = (env = {}) => {
 	// env defaults to `process.env.NODE_ENV`, but can accept webpack's env argument as a backup.
 	env.NODE_ENV = process.env.NODE_ENV || env.NODE_ENV || 'dev';
+	if (env.NODE_ENV === 'production') env.NODE_ENV = 'prod';
 	/**
 	 * Set up configurations for each flavor.
 	 */
@@ -49,6 +51,18 @@ module.exports = (env = {}) => {
  * @return  {object}  Configuration object.
  */
 function setupConfig(flavor, env, config) {
+	const pkg = require('./package.json');
+
+	// Set up banner.
+	let banner = [
+		pkg.name + ' v' + pkg.version,
+		'@filename <filename>',
+		'@author ' + pkg.author,
+		'@homepage ' + pkg.homepage,
+		'@license ' + pkg.license,
+		'@description ' + pkg.description,
+	];
+
 	// Merge config objects.
 	config = Object.assign({
 		entry: {
@@ -98,14 +112,13 @@ function setupConfig(flavor, env, config) {
 	}, config);
 
 	// Add environment specific configuration.
-	if (env.NODE_ENV === 'production') {
+	if (env.NODE_ENV === 'prod') {
 		// Add .min to file extension for minified file.
-		config.output.filename =
-			path.basename(config.output.filename, path.extname(config.output.filename)) +
-			'.min' +
-			path.extname(config.output.filename);
-		// Add plugin to minify the file.
+		config.output.filename = path.fileNameWithPostfix(config.output.filename, '.min');
+
+		// Add plugins for prod environment.
 		config.plugins.push(
+			new webpack.BannerPlugin(banner.join(' | ').replace('<filename>', config.output.filename)),
 			new UglifyJsPlugin(
 				{
 					parallel: {
@@ -117,11 +130,14 @@ function setupConfig(flavor, env, config) {
 					},
 					sourceMap: true
 				}
-			)
+			),
 		);
 	} else {
 		// Add source maps.
 		config.devtool = 'source-map';
+
+		// Add plugins for dev env.
+		config.plugins.push(new webpack.BannerPlugin(banner.join('\n').replace('<filename>', config.output.filename)));
 	}
 
 	return config;

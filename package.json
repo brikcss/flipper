@@ -15,7 +15,7 @@
 		"component",
 		"module"
 	],
-	"main": "dist/flipper-vanilla.js",
+	"main": "dist/js/vanilla/flipper-vanilla.js",
 	"module": "src/js/vanilla/flipper.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
@@ -25,7 +25,7 @@
 		"dev:serve": "browser-sync start --config .browsersync.js",
 		"// [BUILD]": "// Builds files for distribution, including both development and production tasks.",
 		"prebuild": "npm run build:clean",
-		"build": "cross-env NODE_ENV=production run-p js:build sass:build css:build",
+		"build": "cross-env NODE_ENV=production run-p js:build css:build sass:build",
 		"build:clean": "rimraf dist/css/* dist/js/angularjs/* dist/js/vanilla/*",
 		"// [JS]": "// Builds all JS flavors with webpack.",
 		"prejs:build": "npm run js:dev",
@@ -53,7 +53,7 @@
 	"bugs": {
 		"url": "https://github.com/brikcss/flipper/issues"
 	},
-	"homepage": "https://github.com/brikcss/flipper#readme",
+	"homepage": "https://github.com/brikcss/flipper",
 	"devDependencies": {
 		"autoprefixer": "^7.1.4",
 		"babel-cli": "^6.26.0",

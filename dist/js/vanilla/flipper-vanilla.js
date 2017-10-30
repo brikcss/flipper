@@ -1,3 +1,11 @@
+/*!
+ * @brikcss/flipper v0.4.4
+ * @filename flipper-vanilla.js
+ * @author The Zimmee <thezimmee@gmail.com>
+ * @homepage https://github.com/brikcss/flipper
+ * @license MIT
+ * @description Flipper is a front end web module that flips things. In style. Flipper can flip an element in place or open it up to a modal dialog.
+ */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
