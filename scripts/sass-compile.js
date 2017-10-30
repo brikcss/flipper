@@ -3,7 +3,7 @@
 /**
  * Dependencies.
  */
-const sass = require('sass');
+const sass = require('node-sass');
 const postcss = require('postcss');
 const fs = require('fs-extra');
 const path = require('path-extra');
@@ -54,21 +54,29 @@ const fileBundles = {
  */
 // Grab bundles from cli (first from --file, then from --bundle).
 let bundlesToRun = args.file && fileBundles[args.file] ? fileBundles[args.file] : (args.bundles ? args.bundles.split(',') : Object.keys(bundles));
+
 // Start a timer.
 let startTime = Date.now();
 let promises = [];
+
 // Iterate over each bundle.
 bundlesToRun.forEach((bundle) => {
 	if (!bundles[bundle]) {
 		log(`Skipped ${bundle} bundle, it doesn't exist.`);
 		return false;
 	}
+	bundles[bundle].start = Date.now();
 	bundles[bundle].name = bundle;
 	promises.push(compileBundle(bundles[bundle], bundle));
 });
+
 // Make sure all promises finish to time the task duration.
 Promise.all(promises)
-	.then(() => {
+	.then((results) => {
+		let compilePromises = [];
+		results.forEach((promise) => compilePromises = compilePromises.concat(promise));
+		return Promise.all(compilePromises);
+	}).then(() => {
 		if (promises.length > 1) {
 			let endTime = Date.now();
 			let duration = formatDuration(endTime - startTime);
@@ -85,66 +93,81 @@ Promise.all(promises)
  * @return  {promise}
  */
 function compileBundle(bundle) {
-	bundle.start = Date.now();
+	let compilePromises = [];
 
-	// Sass always compiles for dev, then postcss handles the production build.
-	return sass.render({
-		file: bundle.entry,
-		indentType: 'tab',
-		indentWidth: 1,
-		outputStyle: 'expanded',
-		sourceMap: true
-	}, (error, result) => {
-		if (error) log(error);
+	return new Promise((resolve, reject) => {
+		// Sass always compiles for dev, then postcss handles the production build.
+		return sass.render({
+			file: bundle.entry,
+			indentType: 'tab',
+			indentWidth: 1,
+			outputStyle: 'expanded',
+			sourceComments: true,
+			sourceMap: true,
+			outFile: bundle.output + '.map'
+		}, (error, result) => {
+			if (error) {
+				log(error);
+				reject(error);
+			}
 
-		// Track duration of just sass compilation.
-		bundle.sassDuration = formatDuration(Date.now() - bundle.start);
+			// Track duration of just sass compilation.
+			bundle.sassDuration = formatDuration(Date.now() - bundle.start);
 
-		// Set up default plugins.
-		let plugins = [
-			require('autoprefixer')({cascade: false})
-		];
+			// Set up plugins.
+			let plugins = [
+				require('autoprefixer')({cascade: false})
+			];
 
-		// Run postcss.
-		return postcss(plugins)
-			.process(result.css, {
-				from: bundle.entry,
-				to: bundle.output,
-				map: {inline: false}
-			})
-			.then((result) => {
-				const pkg = require('../package.json');
-				let promises = [];
-				let banner = [
-					pkg.name + ' v' + pkg.version,
-					'@filename ' + path.basename(bundle.output),
-					'@author ' + pkg.author,
-					'@homepage ' + pkg.homepage,
-					'@license ' + pkg.license,
-					'@description ' + pkg.description,
-				];
+			// Run postcss.
+			return postcss(plugins)
+				.process(result.css, {
+					from: bundle.entry,
+					to: bundle.output,
+					map: {
+						prev: result.map.toString(),
+						inline: false
+					}
+				})
+				.then((result) => {
+					const pkg = require('../package.json');
+					let banner = [
+						pkg.name + ' v' + pkg.version,
+						'@filename ' + path.basename(bundle.output),
+						'@author ' + pkg.author,
+						'@homepage ' + pkg.homepage,
+						'@license ' + pkg.license,
+						'@description ' + pkg.description,
+					];
 
-				// Save unminified file.
-				promises.push(fs.outputFile(bundle.output, ['/*!\n * ' + banner.join('\n * ') + '\n */', result.css].join('\n\n\n')));
+					// Always save unminified file.
+					compilePromises.push(fs.outputFile(bundle.output, ['/*!\n * ' + banner.join('\n * ') + '\n */', result.css].join('\n\n\n')));
 
-				// Save source map.
-				if (result.map) {
-					promises.push(fs.outputFile(bundle.output + '.map', result.map));
-				}
+					// Save sourcemap.
+					if (result.map) {
+						compilePromises.push(fs.outputFile(bundle.output + '.map', result.map));
+					}
 
-				// Minify it in production.
-				if (args.env === 'prod' && bundle.envs.indexOf('prod') > -1) {
-					let minifiedCss = require('csso').minify(result.css).css;
-					promises.push( fs.outputFile(path.fileNameWithPostfix(bundle.output, '.min'), '/*! ' + banner.join(' | ') + ' */\n' + minifiedCss ));
-				}
+					// Minify it in production.
+					if (args.env === 'prod' && bundle.envs.indexOf('prod') > -1) {
+						let minifiedCss = require('csso').minify(result.css).css;
+						compilePromises.push( fs.outputFile(path.fileNameWithPostfix(bundle.output, '.min'), '/*! ' + banner.join(' | ') + ' */\n' + minifiedCss ));
+					}
 
-				// Log time.
-				bundle.stop = Date.now();
-				bundle.duration = formatDuration(bundle.stop - bundle.start);
-				log(`Compiled ${bundle.name} bundle [${bundle.output}] in ${bundle.duration} (${bundle.sassDuration} for sass).`);
+					return Promise.all(compilePromises);
+				}).then((result) => {
+					// Log time.
+					bundle.stop = Date.now();
+					bundle.duration = formatDuration(bundle.stop - bundle.start);
+					log(`Compiled ${bundle.name} bundle [${bundle.output}] in ${bundle.duration} (${bundle.sassDuration} for sass).`);
 
-				return Promise.all(promises);
-			}).catch((error) => log(error));
+					resolve(result);
+					return result;
+				}).catch((error) => {
+					log(error);
+					reject(error);
+				});
+	});
 	});
 }
 

@@ -19,12 +19,11 @@
 	"module": "src/js/vanilla/flipper.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"// [DEV]": "// For local development, watches files and builds them when they change. NOTE: Does not run any production tasks, such as minifying files.",
-		"predev": "run-p css:dev",
-		"dev": "run-p js:watch css:watch dev:serve",
-		"dev:serve": "browser-sync start --config .browsersync.js",
+		"// [WATCH]": "// For local development, watches files and serves them up with live reload. NOTE: dev/watch does not run any production tasks, such as minifying files.",
+		"dev": "npm run watch",
+		"watch": "run-p js:watch css:watch watch:serve",
+		"watch:serve": "browser-sync start --config .browsersync.js",
 		"// [BUILD]": "// Builds files for distribution, including both development and production tasks.",
-		"prebuild": "npm run build:clean",
 		"build": "cross-env NODE_ENV=production run-p js:build css:build sass:build",
 		"build:clean": "rimraf dist/css/* dist/js/angularjs/* dist/js/vanilla/*",
 		"// [JS]": "// Builds all JS flavors with webpack.",
@@ -40,9 +39,7 @@
 		"css:dev": "npm run sass:compile",
 		"css:dev:dist": "npm run sass:compile -- --bundles=dist",
 		"css:dev:examples": "npm run sass:compile -- --bundles=examples",
-		"css:watch": "chokidar src/sass/*.scss examples/example.scss -c 'npm run sass:compile -- --file={path}'",
-		"css:watch:dist": "chokidar src/sass/*.scss -c 'npm run css:dev:dist'",
-		"css:watch:examples": "chokidar examples/example.scss src/sass/*.scss -c 'npm run css:dev:examples'"
+		"css:watch": "chokidar src/sass/*.scss examples/example.scss -c 'npm run sass:compile -- --file={path}'"
 	},
 	"repository": {
 		"type": "git",
