@@ -3,6 +3,11 @@
 # prepare-commit-msg hook.
 
 ## ADD BRANCH TO COMMIT MESSAGE.
+# Get the current branch name.
 BRANCH=`git branch | grep '^\*' | cut -b3-`
+# Cache the commit message.
 FILE=`cat "$1"`
+# Remove the branch if it already exists (like with git commit --ammend).
+FILE="${FILE%[^\n][^\n]\[BRANCH:*}"
+# Append the branch name to the commit message.
 echo "$FILE\n\n[BRANCH: $BRANCH]" > "$1"
