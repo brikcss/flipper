@@ -28,7 +28,7 @@
 		1. [`open-flipper` directive](#open-flipper-directive)
 		1. [`close-flipper` directive](#close-flipper-directive)
 		1. [`toggle-flipper` directive](#toggle-flipper-directive)
-1. [Questions, comments, concerns](#questions-comments-concerns)
+1. [Questions? Comments? Feature requests? Bugs? Pull Requests? How to contribute to `brikcss`](#questions-comments-feature-requests-bugs-pull-requests-how-to-contribute-to-brikcss)
 
 <!-- /MarkdownTOC -->
 
@@ -419,7 +419,9 @@ Use the `toggle-flipper` directive to bind a toggle click event to any DOM eleme
 <button toggle-flipper="my-flipper" type="button">Toggle my-flipper</button>
 ```
 
-<a name="questions-comments-concerns"></a>
-## Questions, comments, concerns
+<a name="questions-comments-feature-requests-bugs-pull-requests-how-to-contribute-to-brikcss"></a>
+## Questions? Comments? Feature requests? Bugs? Pull Requests? How to contribute to `brikcss`
 
-Pull requests and bugs are more than welcome, as are questions and feedback. Please include as much information as possible with each bug, pull request, and other inquiries. Your help is much appreciated!
+**We love contributors and appreciate all contributions!!!**
+
+We more than welcome all questions, feedback, bug reports, and pull requests. Before submitting any type of request, please read our [contributing guidelines](CONTRIBUTING.md). This will help us maintain an efficient level of communication, make the development process smooth and enjoyable, and make `brikcss` amazing!

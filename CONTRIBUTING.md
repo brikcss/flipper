@@ -1,24 +1,81 @@
 # Contributing to brikcss
 
 **We love contributors and appreciate all contributions!!!**
-To make the development process smooth, and to make brikcss amazing, here are guidelines we ask all to follow.
+
+We more than welcome all questions, feedback, bug reports, and pull requests. Before submitting any type of request, please closely adhere to our contributing guidelines below. This will help us maintain an efficient level of communication, make the development process smooth and enjoyable, and make `brikcss` amazing!
+
 
 <!-- MarkdownTOC depth=5 -->
 
+1. [Code of Conduct](#code-of-conduct)
+1. [Question or problem? Feature request? Found a bug?](#question-or-problem-feature-request-found-a-bug)
+	1. [Submitting an issue](#submitting-an-issue)
+1. [Submitting Pull Requests](#submitting-pull-requests)
 1. [Committing work](#committing-work)
 	1. [Commit Conventions](#commit-conventions)
-		1. [Available Types](#available-types)
-		1. [Available Scopes](#available-scopes)
-		1. [Referencing issues and breaking changes in the footer](#referencing-issues-and-breaking-changes-in-the-footer)
-		1. [Other points of emphasis](#other-points-of-emphasis)
-		1. [Example of a proper commit message](#example-of-a-proper-commit-message)
 	1. [Commit Tooling](#commit-tooling)
 		1. [`npm run commit`](#npm-run-commit)
 		1. [Commit linter](#commit-linter)
+		1. [Sublime commit snippet](#sublime-commit-snippet)
 		1. [Branch Name](#branch-name)
 
 <!-- /MarkdownTOC -->
 
+<a name="code-of-conduct"></a>
+## Code of Conduct
+
+**_Please be respectful and kind. Treat others as you would like to be treated._**
+
+We embrace all questions, feedback, and other contributions. We also embrace difficult conversations when they need to be had. But there are no "dumb" questions or comments and all contributions and contributors -- however big or small -- are welcome and appreciated. We aim to treat all contributors with kindness and respect, and ask all others to do the same.
+
+We love coding and creating cool stuff like `brikcss`. But please remember that in the end, this is just code. _The way we treat others is always more important than code_.
+
+We reserve the right to take action -- such as removing issues, comments, PRs, or blocking accounts -- whenever this code of conduct is violated.
+
+<a name="question-or-problem-feature-request-found-a-bug"></a>
+## Question or problem? Feature request? Found a bug?
+
+Please help us to maximize our efforts by doing all you can to avoid reporting duplicate issues. Search for answers or related bugs first. If you can't find answers, please submit an issue.
+
+<a name="submitting-an-issue"></a>
+### Submitting an issue
+
+Please use the following template when making any request (via github issues) and fill out all fields relevant to your request:
+
+<pre>
+**Type of request**: Question or Feature request or Bug or Other request
+**Overview**: Explain the details of your request. The more specific you are, the less back and forth required to understand the request.
+**Motivation**: Why is this important to you and why should it be important to everybody?
+**Browsers and Operating System**: What browser(s) and OS(s) can this be duplicated on?
+**Steps to reproduce**: List steps to reproduce any issues.
+**Live code example**: A live example of the issue on <a href="https://codepen.io">codepen</a>, <a href="https://jsfiddle.net">jsfiddle</a> (or another code playground) is most helpful. If not possible, an inline code example will do.
+**Suggested fixes**: Ideally we prefer you submit a pull request. However, we don't want to waste your time either. So before submitting a PR, please suggest a fix. If you can't fix it, please help to diagnose where the issue might be coming from. The more help you provide, the more quickly we can handle your request.
+</pre>
+
+<a name="submitting-pull-requests"></a>
+## Submitting Pull Requests
+
+We don't want to waste your time. And we don't want to duplicate any effort. So **before** submitting any pull request, please do the following:
+
+1. [Open an issue](#submitting-an-issue) and discuss the pull request with us.
+2. Read this entire [contributing guide](contributing.md).
+
+When creating a pull request, follow these guidelines:
+
+- Make your changes in a new git branch, created from `master`.
+	```
+	git checkout -b my-branch master
+	```
+- Create your fix or feature.
+- **Important**: Commit your changes by following our [commit policy](#committing-work).
+- Push your feature branch to github.
+	```
+	git push origin my-branch
+	```
+- Create a pull request.
+- We will review it and either merge or discuss with you the next steps.
+
+**Thank you for your contribution!!!** It truly is much appreciated.
 
 <a name="committing-work"></a>
 ## Committing work
@@ -31,9 +88,9 @@ We have very specific rules for formatting commit messages because:
 <a name="commit-conventions"></a>
 ### Commit Conventions
 
-We use [Angular commit conventions](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit) with some exceptions as outlined in this section. The parts of a commit message include _type_, _scope_, _subject_, _body_, and _footer_, and looks like this:
+We use [Angular commit conventions](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit) with some exceptions as outlined in these docs. The parts that make up a commit message include _type_, _scope_, _subject_, _body_, and _footer_, and looks like this:
 
-```bash
+```text
 <type>(<scope>): <subject>
 
 <body>
@@ -43,71 +100,13 @@ We use [Angular commit conventions](https://github.com/angular/angular.js/blob/m
 
 where:
 
-- _type_ is a predefined keyword to categorize the type of commit.
-- _scope_ is metadata which describes where the changes occurred. _scope_ is optional, but encouraged, and can be selected from a predefined list.
-- _subject_ briefly describes the changes in no more than 100 characters (including the _type_ and _scope_).
-- _body_ provides additional details, including motivation for the change, a comparison of new and previous behavior, and any other useful information to help other developers understand the change. Write your _subject_ and _body_ as if you were training a developer who had never before seen this codebase.
-- _footer_ contains _all_ references to issues and flags whether this commit has any breaking changes.
+- **type** is required metadata which categorizes the type of commit. See [how to correctly select a commit type](docs/commit-types.md).
+- **scope** is required metadata which describes in 1-2 words the place in the code where changes occurred. See [how to correctly choose a commit scope](docs/commit-scopes.md).
+- **subject** describes the changes which, along with _type_ and _scope_, is limited to 100 characters.
+- **body** provides additional details related to this commit. See [how to write a good commit body](docs/commit-body.md).
+- **footer** contains _all_ references to issues and flags whether this commit has any breaking changes. See [how to write the commit footer](docs/commit-footer.md).
 
-<a name="available-types"></a>
-#### Available Types
-
-You must use one of the following _types_:
-
-- **feat**: Add a new feature.
-- **fix**: Work on a bug fix.
-- **docs**: Add or update documentation.
-- **perf**: Improve performance.
-- **test**: Add or update tests.
-- **refactor**: Code change that doesn't fix a bug or add a feature.
-- **style**: Code style change, such as whitespace, formatting, etc.
-- **tools**: Add or update tooling, such as build, dependencies, etc.
-- **revert**: Reverts a commit. This is a special type and requires the following format:
-	```
-	revert: This reverts commit <SHA for commit being reverted>
-	```
-
-<a name="available-scopes"></a>
-#### Available Scopes
-
-Use one of the following predefined _scopes_, if possible, though you may use your own _scope_ as needed:
-
-- _css_: Styles change.
-- _core_: Change to core flipper JS functionality.
-- _angularjs_: Change to thin AngularJS wrapper around flipper.
-
-<a name="referencing-issues-and-breaking-changes-in-the-footer"></a>
-#### Referencing issues and breaking changes in the footer
-
-- The commit _footer_ is optional, but required if:
-	- The commit has a breaking change.
-	- There are any related issues.
-- If the commit has a breaking change, add "BREAKING CHANGE: " to the commit _footer_.
-- Reference issues in the _footer_ with [keywords](https://help.github.com/articles/closing-issues-using-keywords/) such as "fixes", "closes", and "related" (in the [example below](#example-of-a-proper-commit-message), issue #456 would be automatically closed in github).
-- To reference issues from other platforms (such as Target Process), add a platform prefix. In the [example below](#example-of-a-proper-commit-message), issue #321 is in Target Process.
-
-<a name="other-points-of-emphasis"></a>
-#### Other points of emphasis
-
-- We prefer normal, human readable sentences. Capitalize each sentence and end it with a period (.).
-- However, _scopes_ and _types_ should be lowercase.
-- No line should be longer than 100 characters.
-- Use present tense (i.e., "fix", not "fixed"). The one exception is in the _footer_ where you reference issues.
-
-<a name="example-of-a-proper-commit-message"></a>
-#### Example of a proper commit message
-
-```
-feat(angularjs): Add flipper-open directive for AngularJS.
-
-The flipper-open directive does the following:
-- Creates / inits the flipper.
-- Automatically binds the open click event to `$element`.
-- Destroys the flipper when the `$scope` is destroyed.
-
-BREAKING CHANGE: The flipper-open directive replaces the old fliper-open directive.
-Related to #123, TP #321. Closes #456.
-```
+See a [good example of a commit message](docs/commit-message-example.md).
 
 <a name="commit-tooling"></a>
 ### Commit Tooling
@@ -119,14 +118,19 @@ We enforce commit conventions with [commitizen](https://www.npmjs.com/package/co
 
 Running `npm run commit` will ask you for all information needed to create a proper commit message. It is **strongly** encouraged to use this command instead of `git commit`.
 
-_Note: The `git cz` command is also available if you have [commitizen]([commitizen](https://www.npmjs.com/package/commitizen) installed globally (`npm install -g commitizen`). This would do the same thing as `npm run commit`._
+_Note: The `git cz` command is also available if you have [commitizen](https://www.npmjs.com/package/commitizen) installed globally (`npm install -g commitizen`). This would do the same thing as `npm run commit`._
 
 <a name="commit-linter"></a>
 #### Commit linter
 
-If you do not use `npm run commit` or `git cz`, you will run into errors when you create a commit and do not follow outlined commit policy. This is because [commitlinter](https://www.npmjs.com/package/@commitlint/prompt) lints every commit message.
+If you choose not to use `npm run commit`, you will run into errors when you create a commit and do not follow our outlined commit policy. This is because [commitlinter](https://www.npmjs.com/package/@commitlint/prompt) lints every commit message.
 
-But never fear. When you create a commit message that does not meet our commit policy, the error message will let you know why your commit message was not accepted. Just update your commit message and all is well!
+Never fear. When you create a commit message that does not meet our commit policy, the error message will let you know why your commit message was not accepted. Just update your commit message and all is well!
+
+<a name="sublime-commit-snippet"></a>
+#### Sublime commit snippet
+
+If you choose not to use `npm run commit`, and you use Sublime Text, [here is a helpful Sublime snippet](https://gist.github.com/thezimmee/1034b814cef92181c5342ec693bd9a97) which will help you write commit messages that meet our guidelines.
 
 <a name="branch-name"></a>
 #### Branch Name
