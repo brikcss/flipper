@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# prepare-commit-msg hook.
+
+## ADD BRANCH TO COMMIT MESSAGE.
+BRANCH=`git branch | grep '^\*' | cut -b3-`
+FILE=`cat "$1"`
+echo "$FILE\n\n[BRANCH: $BRANCH]" > "$1"

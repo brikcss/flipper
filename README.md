@@ -1,5 +1,7 @@
 # Flipper
 
+[![npm (scoped)](https://img.shields.io/npm/v/@brikcss/flipper.svg?style=flat-square)](https://www.npmjs.com/package/@brikcss/flipper) [![npm (scoped)](https://img.shields.io/npm/dm/@brikcss/flipper.svg?style=flat-square)](https://www.npmjs.com/package/@brikcss/flipper) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)](http://commitizen.github.io/cz-cli/) [![npm](https://img.shields.io/npm/l/express.svg?style=flat-square)](https://choosealicense.com/licenses/mit/)
+
 > Flipper is a front end web component that flips things in style. Flipper can flip an element in place or flip it open to a modal dialog.
 
 <!-- MarkdownTOC depth=5 -->
