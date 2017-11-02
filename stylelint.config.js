@@ -15,7 +15,7 @@
 
 
 /* eslint-env node */
-var isProd = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'prod';
+var isProd = process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production';
 module.exports = {
 	extends: [
 		// `stylelint-config-recommended` turns on all rules that can cause errors in CSS.

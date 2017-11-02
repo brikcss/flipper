@@ -16,7 +16,7 @@ const args = require('minimist')(process.argv.slice(2));
 args.bundles = args.bundles || args.b;
 args.file = args.file || args.f;
 args.env = args.env || args.e || process.env.NODE_ENV || 'dev';
-if (args.env === 'production') args.env = 'prod';
+args.isProd = args.env === 'production' || args.env === 'prod';
 
 
 /**
@@ -153,7 +153,7 @@ function compileBundle(bundle) {
 					}
 
 					// Minify it in production.
-					if (args.env === 'prod' && bundle.envs.indexOf('prod') > -1) {
+					if (args.isProd && bundle.envs.indexOf('prod') > -1) {
 						let minifiedCss = require('csso').minify(result.css).css;
 						compilePromises.push( fs.outputFile(path.fileNameWithPostfix(bundle.output, '.min'), '/*! ' + banner.join(' | ') + ' */\n' + minifiedCss ));
 					}

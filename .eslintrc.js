@@ -1,5 +1,6 @@
 // http://eslint.org/docs/user-guide/configuring
 
+const isProd = process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production';
 module.exports = {
 	root: true,
 	parser: 'babel-eslint',
@@ -15,6 +16,6 @@ module.exports = {
 	// add your custom rules here
 	'rules': {
 		// allow debugger during development
-		'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+		'no-debugger': isProd ? 2 : 0
 	}
 }

@@ -4,7 +4,7 @@
 // eslint-disable-next-line
 module.exports = (context) => {
 	// This config was created solely for linting via postcss-cli. We also run postcss inside of `scripts/sass-compile.js`, but that does not use this config.
-	const isProd = context.env === 'production' || process.env.NODE_ENV === 'production';
+	const isProd = context.env === 'prod' || context.env === 'production' || process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production';
 
 	return {
 		map: context.options.map,

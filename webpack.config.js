@@ -22,23 +22,36 @@ const libraryName = 'flipper';
  * @return  {object|array}  Webpack configuration(s).
  */
 module.exports = (env = {}) => {
+	let configs = [];
+
 	// env defaults to `process.env.NODE_ENV`, but can accept webpack's env argument as a backup.
 	env.NODE_ENV = process.env.NODE_ENV || env.NODE_ENV || 'dev';
-	if (env.NODE_ENV === 'production') env.NODE_ENV = 'prod';
+	env.isProd = env.NODE_ENV === 'production' || env.NODE_ENV === 'prod';
 	/**
 	 * Set up configurations for each flavor.
 	 */
-	let vanillaConfig = setupConfig('vanilla', env);
-	let angularConfig = setupConfig('angularjs', env, {
+	// Create angular specific config.
+	let angularConfig = {
 		entry: {
 			angularjs: './src/js/angularjs/index.js'
 		}
-	});
-	delete angularConfig.output.library;
-	delete angularConfig.output.libraryTarget;
+	};
+	// Run dev when env === 'prod' so we build dev and .min files.
+	if (env.isProd) {
+		configs.push(
+			setupConfig('vanilla', 'dev'),
+			setupConfig('angularjs', 'dev', angularConfig)
+		);
+	}
+	configs.push(
+		setupConfig('vanilla', env),
+		setupConfig('angularjs', env, angularConfig)
+	);
+	// delete angularConfig.output.library;
+	// delete angularConfig.output.libraryTarget;
 
 	// Return all configs.
-	return [vanillaConfig, angularConfig];
+	return configs;
 };
 
 
@@ -72,8 +85,8 @@ function setupConfig(flavor, env, config) {
 			path: path.resolve(__dirname, 'dist/js/' + flavor),
 			filename: `${libraryName}-[name].js`, // [name] and [chunkhash] are available.
 			// publicPath: '', // url to output directory resolved relative to the HTML page.
-			library: libraryName, // name of the exported library.
-			libraryTarget: 'umd', // type of exported library.
+			library: flavor === 'vanilla' ? libraryName : undefined, // name of the exported library.
+			libraryTarget: flavor === 'vanilla' ? 'umd' : undefined, // type of exported library.
 			// sourceMapFilename: 'sourcemaps/[file].js.map', // filename template of source map location.
 		},
 		module: {
@@ -86,8 +99,8 @@ function setupConfig(flavor, env, config) {
 						// options: {
 						// 	preset: ['env']
 						// }
-					}, {
-						loader: 'eslint-loader',
+					// }, {
+					// 	loader: 'eslint-loader',
 						// options: {}
 					}]
 				}
@@ -112,7 +125,7 @@ function setupConfig(flavor, env, config) {
 	}, config);
 
 	// Add environment specific configuration.
-	if (env.NODE_ENV === 'prod') {
+	if (env.isProd) {
 		// Add .min to file extension for minified file.
 		config.output.filename = path.fileNameWithPostfix(config.output.filename, '.min');
 
