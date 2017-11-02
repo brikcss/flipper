@@ -28,7 +28,7 @@ module.exports = {
 				'refactor',
 				'style',
 				'tools',
-				// 'chore',
+				'chore',
 				'revert',
 			]]
 	}
