@@ -51,7 +51,7 @@ module.exports = {
 		}
 	},
 	logLevel: 'info',
-	// logPrefix: 'i',
+	logPrefix: 'BS',
 	logConnections: false,
 	logFileChanges: true,
 	logSnippet: true,
