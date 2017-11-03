@@ -1,13 +1,13 @@
 {
 	"name": "@brikcss/flipper",
-	"version": "0.4.4",
+	"version": "0.0.0-development",
 	"description": "Flipper is a front end web module that flips things. In style. Flipper can flip an element in place or open it up to a modal dialog.",
 	"author": "The Zimmee <thezimmee@gmail.com>",
 	"license": "MIT",
 	"homepage": "https://github.com/brikcss/flipper",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/brikcss/flipper.git"
+		"url": "https://github.com/brikcss/flipper.git"
 	},
 	"bugs": {
 		"url": "https://github.com/brikcss/flipper/issues"
@@ -34,6 +34,12 @@
 		"commitizen": {
 			"path": "@commitlint/prompt"
 		}
+	},
+	"release": {
+		"branch": "dev"
+	},
+	"publishConfig": {
+		"tag": "dev"
 	},
 	"scripts": {
 		"test": "echo \"Running tests...\" && cross-env NODE_ENV=production concurrently --kill-others-on-fail --names=sass:lint,js:lint \"npm run sass:test:lint\" \"npm run js:test:lint\" && echo \"[ok] Tests complete.\"",
@@ -63,7 +69,9 @@
 		"sass:dev:dist": "npm run sass:compile -- --bundles=dist",
 		"sass:dev:examples": "npm run sass:compile -- --bundles=examples",
 		"sass:test:lint": "postcss src/sass/*.scss --replace --no-map",
-		"sass:watch": "chokidar src/sass/*.scss examples/example.scss -c 'npm run sass:compile -- --file={path} && echo \"[ok] Sass lint complete.\"' --verbose"
+		"sass:watch": "chokidar src/sass/*.scss examples/example.scss -c 'npm run sass:compile -- --file={path} && echo \"[ok] Sass lint complete.\"' --verbose",
+		"// [RELEASE]": "Semantic release manages our release process.",
+		"semantic-release": "semantic-release pre && npm publish && semantic-release post"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^4.2.2",
@@ -101,6 +109,7 @@
 		"stylelint-config-recommended": "1.0.0",
 		"stylelint-order": "0.7.0",
 		"stylelint-scss": "2.1.0",
-		"webpack": "^3.8.1"
+		"webpack": "^3.8.1",
+		"semantic-release": "^8.2.0"
 	}
 }
