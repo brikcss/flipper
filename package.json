@@ -41,14 +41,14 @@
 	"publishConfig": {
 		"tag": "dev"
 	},
+	"files": [
+		"src/",
+		"dist/",
+		"examples/",
+		"docs/"
+	],
 	"scripts": {
 		"test": "echo \"Running tests...\" && cross-env NODE_ENV=production concurrently --kill-others-on-fail --names=sass:lint,js:lint \"npm run sass:test:lint\" \"npm run js:test:lint\" && echo \"[ok] Tests complete.\"",
-		"// [GIT|HUSKY]": "// Helpers for interacting with git and husky (githooks).",
-		"commit": "echo \"See the \"git commit policy\" section in CONTRIBUTING.md for details on how to create your commit message.\n\" && git-cz",
-		"commitmsg": "commitlint -e $GIT_PARAMS",
-		"prepush": "npm run build",
-		"// [NPM]": "// Install hook for NPM.",
-		"postinstall": "node ./scripts/install.js",
 		"// [WATCH]": "// For local development, watches files and serves them up with live reload. NOTE: dev/watch does not run any production tasks, such as minifying files.",
 		"dev": "npm run watch",
 		"watch": "concurrently --raw \"npm run js:watch\" \"npm run sass:watch\" \"npm run watch:serve\"",
@@ -70,8 +70,15 @@
 		"sass:dev:examples": "npm run sass:compile -- --bundles=examples",
 		"sass:test:lint": "postcss src/sass/*.scss --replace --no-map",
 		"sass:watch": "chokidar src/sass/*.scss examples/example.scss -c 'npm run sass:compile -- --file={path} && echo \"[ok] Sass lint complete.\"' --verbose",
+		"// [GIT|HUSKY]": "// Helpers for interacting with git and husky (githooks).",
+		"commit": "echo \"See the \"git commit policy\" section in CONTRIBUTING.md for details on how to create your commit message.\n\" && git-cz",
+		"commitmsg": "commitlint -e $GIT_PARAMS",
+		"prepush": "npm run build",
+		"// [NPM]": "// Install hook for NPM.",
+		"postinstall": "node ./scripts/install.js",
 		"// [RELEASE]": "Semantic release manages our release process.",
-		"semantic-release": "semantic-release pre && npm publish && semantic-release post"
+		"prepublishOnly": "npm run build",
+		"release": "semantic-release pre && npm publish && semantic-release post"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^4.2.2",

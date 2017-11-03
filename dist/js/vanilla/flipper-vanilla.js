@@ -1,5 +1,5 @@
 /*!
- * @brikcss/flipper v0.4.4
+ * @brikcss/flipper v0.0.0-development
  * @filename flipper-vanilla.js
  * @author The Zimmee <thezimmee@gmail.com>
  * @homepage https://github.com/brikcss/flipper

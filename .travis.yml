@@ -3,17 +3,18 @@ cache:
   directories:
     - ~/.npm
 notifications:
-  email: true
+  email:
+    on_success: always
+    on_failure: always
 node_js:
   - '8'
   - '6'
-  - '4'
 before_script:
-  - npm prune
+  - npm prune -d
 script:
-  - npm run build
+  - npm run build -d
 after_success:
-  - npm run semantic-release
+  - npm run release -d
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
