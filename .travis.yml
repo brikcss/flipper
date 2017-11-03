@@ -1,7 +1,8 @@
 language: node_js
 cache:
+  bundler: true
   directories:
-    - ~/.npm
+    - node_modules
 notifications:
   email:
     on_success: always
@@ -9,14 +10,12 @@ notifications:
 node_js:
   - '8'
   - '6'
-env:
-  - NODE_ENV=production
 before_script:
-  - npm prune -d
+  - npm prune
 script:
-  - npm run build -d
+  - npm run build
 after_success:
-  - npm run release -d
+  - npm run release
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
