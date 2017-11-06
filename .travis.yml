@@ -11,11 +11,11 @@ node_js:
   - '8'
   - '6'
 before_script:
-  - npm prune
+  - npm prune -d
 script:
-  - npm run build
+  - npm run build -d
 after_success:
-  - npm run release
+  - npm run release -d
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
