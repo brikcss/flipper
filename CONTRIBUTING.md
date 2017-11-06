@@ -11,13 +11,15 @@ We more than welcome all questions, feedback, bug reports, and pull requests. Be
 1. [Question or problem? Feature request? Found a bug?](#question-or-problem-feature-request-found-a-bug)
 	1. [Submitting an issue](#submitting-an-issue)
 1. [Submitting Pull Requests](#submitting-pull-requests)
-1. [Committing work](#committing-work)
-	1. [Commit Conventions](#commit-conventions)
-	1. [Commit Tooling](#commit-tooling)
-		1. [`npm run commit`](#npm-run-commit)
-		1. [Commit linter](#commit-linter)
-		1. [Sublime commit snippet](#sublime-commit-snippet)
-		1. [Branch Name](#branch-name)
+1. [Committing and pushing code](#committing-and-pushing-code)
+	1. [Release channels](#release-channels)
+	1. [Development requirements](#development-requirements)
+	1. [Commit Policy](#commit-policy)
+		1. [How to write valid commit messages](#how-to-write-valid-commit-messages)
+			1. [`npm run commit`](#npm-run-commit)
+			1. [Commit linter](#commit-linter)
+			1. [Sublime commit snippet](#sublime-commit-snippet)
+	1. [Tooling](#tooling)
 
 <!-- /MarkdownTOC -->
 
@@ -77,16 +79,44 @@ When creating a pull request, follow these guidelines:
 
 **Thank you for your contribution!!!** It truly is much appreciated.
 
-<a name="committing-work"></a>
-## Committing work
+<a name="committing-and-pushing-code"></a>
+## Committing and pushing code
 
 We have very specific rules for formatting commit messages because:
 
 1. We can automatically generate our changelogs.
 2. We can easily understand the commit history.
 
-<a name="commit-conventions"></a>
-### Commit Conventions
+In order to contribute code to `brikcss`, it is important to familiar with our development strategy and strictly follow the required conventions.
+
+<a name="release-channels"></a>
+### Release channels
+
+We use [npm dist-tag](https://docs.npmjs.com/cli/dist-tag) to maintain the following [release channels](https://github.com/npm/npm/issues/2718):
+
+|  Channel   | git branch | NPM dist-tag |                                         Description                                          |
+|------------|------------|--------------|----------------------------------------------------------------------------------------------|
+| **Stable** | `master`   | `latest`     | Considered most stable. Code is only released here after vetted in the _dev_ channel.        |
+| **Dev**    | `dev`      | `dev`        | Code is always pushed here first, and (perhaps) eventually released to the _stable_ channel. |
+
+To view the version currently tagged in NPM for each release channel:
+
+```bash
+# Will output the version currently tagged for each release channel:
+npm dist-tag ls @brikcss/<package>
+```
+
+<a name="development-requirements"></a>
+### Development requirements
+
+Because so much of the release process is automated, we must strictly adhere to the following guidelines:
+
+1. Commit _all_ code to a new feature/bug branch, which is created from the `master` branch.
+2. When committing code, strictly follow our [commit policy (outlined below)](#commit-policy).
+3. Create a pull request (after your code is ready) to merge your work into the `dev` branch. Let us know that your pull request is ready.
+
+<a name="commit-policy"></a>
+### Commit Policy
 
 We use [Angular commit conventions](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit) with some exceptions as outlined in these docs. The parts that make up a commit message include _type_, _scope_, _subject_, _body_, and _footer_, and looks like this:
 
@@ -108,31 +138,39 @@ where:
 
 See a [good example of a commit message](docs/commit-message-example.md).
 
-<a name="commit-tooling"></a>
-### Commit Tooling
+<a name="how-to-write-valid-commit-messages"></a>
+#### How to write valid commit messages
 
-We enforce commit conventions with [commitizen](https://www.npmjs.com/package/commitizen) and [commitlint](https://www.npmjs.com/package/@commitlint/prompt). This somewhat modifies the commit experience.
+Some tools are provided to make it easy to [write and validate commit messages](#commit-policy).
+
+_Note: When you commit code, [git hooks](#tooling) run and trigger other tasks. This takes time to complete, so do not be alarmed when committing code takes longer than it otherwise would._
 
 <a name="npm-run-commit"></a>
-#### `npm run commit`
+##### `npm run commit`
 
 Running `npm run commit` will ask you for all information needed to create a proper commit message. It is **strongly** encouraged to use this command instead of `git commit`.
 
-_Note: The `git cz` command is also available if you have [commitizen](https://www.npmjs.com/package/commitizen) installed globally (`npm install -g commitizen`). This would do the same thing as `npm run commit`._
+_Note: The `git cz` command is also available if you have [commitizen](https://www.npmjs.com/package/commitizen) installed globally (`npm install -g commitizen`). This command is the same as running `npm run commit`._
 
 <a name="commit-linter"></a>
-#### Commit linter
+##### Commit linter
 
-If you choose not to use `npm run commit`, you will run into errors when you create a commit and do not follow our outlined commit policy. This is because [commitlinter](https://www.npmjs.com/package/@commitlint/prompt) lints every commit message.
+If you choose not to use `npm run commit`, you will run into errors if your commit message does not follow our [commit policy](#commit-policy). This is because [commitlinter](https://www.npmjs.com/package/@commitlint/prompt) lints every commit message.
 
-Never fear. When you create a commit message that does not meet our commit policy, the error message will let you know why your commit message was not accepted. Just update your commit message and all is well!
+Never fear. When you create a commit message that does not meet our commit policy, the error message will describe why your commit message was not accepted. Simply update your commit message and all is well!
 
 <a name="sublime-commit-snippet"></a>
-#### Sublime commit snippet
+##### Sublime commit snippet
 
 If you choose not to use `npm run commit`, and you use Sublime Text, [here is a helpful Sublime snippet](https://gist.github.com/thezimmee/1034b814cef92181c5342ec693bd9a97) which will help you write commit messages that meet our guidelines.
 
-<a name="branch-name"></a>
-#### Branch Name
+<a name="tooling"></a>
+### Tooling
 
-For added convenience in browsing commit history, the name of the branch you commit from is appended at the end of your commit message.
+Understanding [how to commit and push code](#committing-and-pushing-code) should be enough to contribute. If you want to take a deeper look "under the hood", here are the main tools we use:
+
+- [`semantic-release`](https://github.com/semantic-release/semantic-release/) is used to manage code releases.
+- [`commitlint`](https://www.npmjs.com/package/@commitlint/cli) (which is an abstract of [`commitizen`](https://www.npmjs.com/package/commitizen)) is used to create and [lint/validate commit messages](#committing-and-pushing-code).
+- [`husky`](https://www.npmjs.com/package/husky) is used to create [git hooks]([git hooks](https://git-scm.com/docs/githooks)) that are source controlled. The following git hooks are used:
+	- _commitmsg_: All commit messages are validated to ensure they follow our [guidelines for pushing code](#committing-and-pushing-code). This is important since our changelogs are automatically generated from commit history. This hook also appends the branch name to your commit message (which is useful to browse the commit history).
+	- _prepush_: This hook automatically runs tests and the build. You will not be allowed to push code unless tests and the build pass.
