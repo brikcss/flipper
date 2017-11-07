@@ -75,11 +75,10 @@
 		"// [GIT|HUSKY]": "// Helpers for interacting with git and husky (githooks).",
 		"commit": "echo \"See the \"git commit policy\" in CONTRIBUTING.md for details on how to write a valid commit message.\n\" && git-cz",
 		"commitmsg": "commitlint -e $GIT_PARAMS",
+		"preparecommitmsg": "scripts/hooks/prepare-commit-msg ${GIT_PARAMS}",
 		"//": "prepush: Runs the build and checks for a clean state (excluding untracked files).",
 		"prepush": "npm run git:checkstate && npm run build && npm run git:checkstate && echo \"\nPushing code...\n\"",
 		"git:checkstate": ". scripts/ensure-clean-stage.sh",
-		"// [NPM]": "// Install hook for NPM.",
-		"postinstall": "node ./scripts/install.js",
 		"// [RELEASE]": "Semantic release manages our release process.",
 		"prepublishOnly": "npm run build",
 		"release": "semantic-release pre && npm publish && semantic-release post"
