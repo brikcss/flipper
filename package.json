@@ -48,6 +48,8 @@
 		"docs/"
 	],
 	"scripts": {
+		"start": "npm run watch",
+		"// [TESTS]": "Tests.",
 		"test": "echo \"Running tests...\n\" && cross-env NODE_ENV=production concurrently --kill-others-on-fail --names=sass:lint,js:lint \"npm run sass:test:lint\" \"npm run js:test:lint\" && echo \"\n[ok] Tests complete.\n\" || npm run test:fail",
 		"test:fail": "echo \"\n[FAIL] Tests failed.\n\" && exit 1",
 		"// [WATCH]": "// For local development, watches files and serves them up with live reload. NOTE: dev/watch does not run any production tasks, such as minifying files.",

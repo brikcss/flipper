@@ -97,6 +97,7 @@ Use the following checklists (grouped by role) to know exactly what you need to 
 
 - [ ] Read the [guide to contributing code](#contributing-code--pull-requests) before getting started.
 - [ ] _Before writing any code_, [create an issue](#submitting-an-issue) to discuss with us any pull request ideas you have. This helps ensure we are on the same page and increases the likelihood we will approve your pull request.
+- [ ] Follow [development setup instructions](docs/development-setup.md) to set up your local machine for development.
 - [ ] Commit your code to a feature/bug branch **which was branched from `master`**.
 - [ ] All commit messages strictly adhere to our [commit policy (outlined below)](#commit-policy).
 - [ ] When your work is ready, create a pull request to merge to `dev`.
