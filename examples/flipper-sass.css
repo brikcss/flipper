@@ -135,36 +135,57 @@
 
 /** [[END]] */
 /** [[START]] View layer. */
-/* line 13, examples/example.scss */
+/* line 15, examples/example.scss */
 * {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
+	margin: 0;
 }
 
-/* line 16, examples/example.scss */
+/* line 20, examples/example.scss */
+h1,
+h2 {
+	margin-bottom: 1rem;
+}
+
+/* line 25, examples/example.scss */
+p + p {
+	margin-top: 1rem;
+}
+
+/* line 30, examples/example.scss */
 .container {
 	height: 100vh;
 	margin-left: auto;
 	margin-right: auto;
+	max-width: 60rem;
+	padding: 0 2rem;
 }
 
-/* line 21, examples/example.scss */
+/* line 38, examples/example.scss */
 .intro {
-	width: 800px;
-	margin: 20px auto;
+	max-width: 60rem;
+	width: 100%;
+	margin: 1rem auto;
+	padding: 0 1rem;
 }
 
-/* line 25, examples/example.scss */
-.columns {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-pack: center;
-	-ms-flex-pack: center;
-	justify-content: center;
+@media (min-width: 768px) {
+	/* line 45, examples/example.scss */
+	.columns {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-pack: justify;
+		-ms-flex-pack: justify;
+		justify-content: space-between;
+		margin-left: auto;
+		margin-right: auto;
+		width: 100%;
+	}
 }
 
-/* line 29, examples/example.scss */
+/* line 55, examples/example.scss */
 .column {
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -173,32 +194,38 @@
 	-webkit-box-direction: normal;
 	-ms-flex-direction: column;
 	flex-direction: column;
-	margin-left: 20px;
-	margin-right: 20px;
-	width: 240px;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 20rem;
 }
 
-/* line 36, examples/example.scss */
+@media (min-width: 768px) {
+	/* line 55, examples/example.scss */
+	.column {
+		width: calc(33.33333% - 2rem);
+	}
+}
+
+/* line 67, examples/example.scss */
 .flipper {
-	width: 240px;
-	margin-bottom: 20px;
-	margin-top: 20px;
+	margin-bottom: 1rem;
+	margin-top: 1rem;
 }
 
-/* line 41, examples/example.scss */
+/* line 71, examples/example.scss */
 .flipper--equal-height {
-	height: 240px;
+	height: 15rem;
 }
 
-/* line 45, examples/example.scss */
+/* line 75, examples/example.scss */
 .flipper__modal {
 	height: inherit;
 	width: inherit;
 }
 
-/* line 50, examples/example.scss */
+/* line 81, examples/example.scss */
 .padded {
-	padding: 20px;
+	padding: 1rem;
 }
 
 /** [[END]] */

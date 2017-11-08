@@ -62,7 +62,7 @@ module.exports = {
 				// 'function-blacklist': [], // Disallowed functions.
 				// 'function-whitelist': [], // Allowed functions.
 			// Numbers / units.
-				'unit-blacklist': ['px'], // Disallowed units.
+				// 'unit-blacklist': ['px'], // Disallowed units.
 				// 'unit-whitelist': ['rem', 'em', '%', 'deg', 'vh', 'vw', 's', 'ms'], // Allowed units.
 				'number-max-precision': 5,
 			// Values.
@@ -77,8 +77,8 @@ module.exports = {
 				// }, // Disallowed propert/unit pairs.
 				'declaration-property-unit-whitelist': {
 					'font-size': ['em', 'rem'],
-					'height': ['em', 'rem', '%'],
-					'width': ['em', 'rem', '%'],
+					'height': ['em', 'rem', '%', 'vh'],
+					'width': ['em', 'rem', '%', 'vw'],
 					'margin': ['em', 'rem'],
 					'padding': ['em', 'rem'],
 				}, // Allowed property/unit pairs.

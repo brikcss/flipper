@@ -1,0 +1,46 @@
+{
+	"id": "flipper",
+	"viewports": [
+			{
+			"label": "375x667",
+			"width": 375,
+			"height": 667
+		}, {
+			"label": "1280x960",
+			"width": 1280,
+			"height": 960
+		}
+	],
+	"scenarios": [
+		{
+			"label": "vanilla",
+			"url": "./examples/vanilla/index.html",
+			"readySelector": ".flipper__front"
+		}, {
+			"label": "vanilla__open",
+			"url": "./examples/vanilla/index.html",
+			"readySelector": ".flipper__front",
+			"clickSelector": ".flipper__toggle",
+			"delay": 1000,
+			"postInteractionWait": 500
+		}, {
+			"label": "angularjs",
+			"url": "./examples/angularjs/index.html",
+			"readySelector": ".flipper__front"
+		}
+	],
+	"paths": {
+		"bitmaps_reference": "tests/ui",
+		"bitmaps_test": ".tests/ui",
+		"engine_scripts": "scripts",
+		"html_report": ".tests/ui/reports",
+		"ci_report": ".tests/ui/reports"
+	},
+	"report": ["browser"],
+	"engine": "chrome",
+	"engineFlags": [],
+	"asyncCaptureLimit": 5,
+	"asyncCompareLimit": 50,
+	"debug": false,
+	"debugWindow": false
+}

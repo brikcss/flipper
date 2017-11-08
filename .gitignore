@@ -6,3 +6,5 @@ node_modules
 
 # App
 /src/sass/sass
+
+/.tests/
